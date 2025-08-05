@@ -1,0 +1,27 @@
+# Arquivos auxiliares gerados pelo LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+
+# PDF final (se não quiser versionar)
+*.pdf
+
+# Diretórios temporários
+_auto/
+_build/
+latex.out/
+
+# VS Code
+.vscode/
