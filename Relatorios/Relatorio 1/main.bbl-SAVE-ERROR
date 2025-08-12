@@ -1,0 +1,561 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{breganon2021}{article}{}
+      \name{author}{8}{}{%
+        {{un=0,uniquepart=base,hash=c82b0bdd9d929eccb6a049d52ef6b31f}{%
+           family={Breganon},
+           familyi={B\bibinitperiod},
+           given={Ricardo},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=19e69e004301271858ad488b2bce0e1a}{%
+           family={Alves},
+           familyi={A\bibinitperiod},
+           given={Uiliam\bibnamedelimb Nelson\bibnamedelimb Lendzion\bibnamedelima Tomaz},
+           giveni={U\bibinitperiod\bibinitdelim N\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=39061a8205f65d7bc201e1432838d88e}{%
+           family={Ribeiro},
+           familyi={R\bibinitperiod},
+           given={Fernando\bibnamedelimb Sabino\bibnamedelima Fonteque},
+           giveni={F\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9b30844306bfd8db4ff2dbe179a6771b}{%
+           family={Barbara},
+           familyi={B\bibinitperiod},
+           given={Gustavo\bibnamedelima Vendrame},
+           giveni={G\bibinitperiod\bibinitdelim V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8a1acb542d44d363c82836b761e2d701}{%
+           family={De\bibnamedelima Almeida},
+           familyi={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+           given={João\bibnamedelimb Paulo\bibnamedelimb Lima\bibnamedelima Silva},
+           giveni={J\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1fd181ee7a5c638e4f412b1588afc77a}{%
+           family={Pivovar},
+           familyi={P\bibinitperiod},
+           given={Luiz\bibnamedelima Eduardo},
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bb357d91ee97d50692014b043df3d96d}{%
+           family={Montezuma},
+           familyi={M\bibinitperiod},
+           given={Marcio\bibnamedelimb Aurelio\bibnamedelima Furtado},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d853494633dbda2dcd5aa803fefae83e}{%
+           family={Mendonça},
+           familyi={M\bibinitperiod},
+           given={Marcio},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Instituto Federal de Educacao, Ciencia e Tecnologia do Rio Grande do Norte (IFRN)}%
+      }
+      \strng{namehash}{9757b9daff6dc445647d6177e1796c5b}
+      \strng{fullhash}{016ea83817fb0abf419513ee00c033d9}
+      \strng{bibnamehash}{9757b9daff6dc445647d6177e1796c5b}
+      \strng{authorbibnamehash}{9757b9daff6dc445647d6177e1796c5b}
+      \strng{authornamehash}{9757b9daff6dc445647d6177e1796c5b}
+      \strng{authorfullhash}{016ea83817fb0abf419513ee00c033d9}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1807-1600}
+      \field{journaltitle}{HOLOS}
+      \field{month}{9}
+      \field{title}{Desenvolvimento de Sistemas de Pêndulos Invertidos como Ferramentas Didáticas em Cursos de Engenharia de Controle e Automação}
+      \field{volume}{5}
+      \field{year}{2021}
+      \field{pages}{1\bibrangedash 14}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.15628/holos.2021.10351
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.15628/holos.2021.10351
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.15628/holos.2021.10351
+      \endverb
+    \endentry
+    \entry{casas2024}{booklet}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=41ce01d4629574d1ca4a310437a5be4c}{%
+           family={Casas},
+           familyi={C\bibinitperiod},
+           given={Vitoriano\bibnamedelima Medeiros},
+           giveni={V\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=985c3a440c1d94468f50d42fe561bb04}{%
+           family={Cardoso},
+           familyi={C\bibinitperiod},
+           given={João\bibnamedelimb Aristeu\bibnamedelima Seixas},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d09815b8edd893ebf86831e203d9f103}{%
+           family={Souza},
+           familyi={S\bibinitperiod},
+           given={Luiz\bibnamedelimb Antonio\bibnamedelima Sobrinho},
+           giveni={L\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0,
+           prefix={de},
+           prefixi={d\bibinitperiod},
+           prefixun=0}}%
+        {{un=0,uniquepart=base,hash=3c674700e1831fcbab76930dbafdbe6b}{%
+           family={Pedrosa},
+           familyi={P\bibinitperiod},
+           given={Eduardo\bibnamedelima Guimarães},
+           giveni={E\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c182952b6831b7552af8bf37e8e94746}{%
+           family={Araújo},
+           familyi={A\bibinitperiod},
+           given={Rodrigo\bibnamedelima Farias},
+           giveni={R\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{21206f89de53494ee0a31d927e74d37c}
+      \strng{fullhash}{ee027344dcf3d74df217b619cd13d4c0}
+      \strng{bibnamehash}{21206f89de53494ee0a31d927e74d37c}
+      \strng{authorbibnamehash}{21206f89de53494ee0a31d927e74d37c}
+      \strng{authornamehash}{21206f89de53494ee0a31d927e74d37c}
+      \strng{authorfullhash}{ee027344dcf3d74df217b619cd13d4c0}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{EasyChair Preprint 15204}
+      \field{title}{Construction and Control Design of a Rotational Inverted Pendulum Prototype}
+      \field{year}{EasyChair, 2024}
+    \endentry
+    \entry{deepak2019l}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=fb43221d7493075c1cd3110de925de0c}{%
+           family={Deepak},
+           familyi={D\bibinitperiod},
+           given={KN},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4073def77462a9d42f7f85f947685738}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={K\bibnamedelima Rahul},
+           giveni={K\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b423e7c18dccd0a76fb90e6d10555f24}{%
+           family={Ananthan},
+           familyi={A\bibinitperiod},
+           given={T},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{organization}{1}{%
+        {IOP Publishing}%
+      }
+      \strng{namehash}{4502a155a592795c99969b0dcc349449}
+      \strng{fullhash}{4502a155a592795c99969b0dcc349449}
+      \strng{bibnamehash}{4502a155a592795c99969b0dcc349449}
+      \strng{authorbibnamehash}{4502a155a592795c99969b0dcc349449}
+      \strng{authornamehash}{4502a155a592795c99969b0dcc349449}
+      \strng{authorfullhash}{4502a155a592795c99969b0dcc349449}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IOP Conference Series: Materials Science and Engineering}
+      \field{number}{1}
+      \field{title}{Model Predictive Control for rotary inverted pendulum using LabVIEW}
+      \field{volume}{577}
+      \field{year}{2019}
+      \field{pages}{012113}
+      \range{pages}{1}
+    \endentry
+    \entry{diao2016}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=ad4f682bab077204d155b78ef06af075}{%
+           family={Diao},
+           familyi={D\bibinitperiod},
+           given={Xiumin},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {New Orleans, Louisiana}%
+      }
+      \list{publisher}{1}{%
+        {ASEE Conferences}%
+      }
+      \strng{namehash}{ad4f682bab077204d155b78ef06af075}
+      \strng{fullhash}{ad4f682bab077204d155b78ef06af075}
+      \strng{bibnamehash}{ad4f682bab077204d155b78ef06af075}
+      \strng{authorbibnamehash}{ad4f682bab077204d155b78ef06af075}
+      \strng{authornamehash}{ad4f682bab077204d155b78ef06af075}
+      \strng{authorfullhash}{ad4f682bab077204d155b78ef06af075}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2016 ASEE Annual Conference \& Exposition}
+      \field{month}{6}
+      \field{note}{https://peer.asee.org/25750}
+      \field{number}{10.18260/p.25750}
+      \field{title}{Modular Control of a Rotary Inverted Pendulum System}
+      \field{year}{2016}
+    \endentry
+    \entry{Duart2017}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=2bc1af3f92b29a970a9da58225e9725c}{%
+           family={Duart},
+           familyi={D\bibinitperiod},
+           given={J\bibnamedelima L},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=448be333f89560a0dfa077136e60c5e3}{%
+           family={Montero},
+           familyi={M\bibinitperiod},
+           given={B},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a77b30770d0a825f7c2e509a02ab7a49}{%
+           family={Ospina},
+           familyi={O\bibinitperiod},
+           given={P\bibnamedelima A},
+           giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b6c683f1710d8cbae9d65b887391b3cc}{%
+           family={González},
+           familyi={G\bibinitperiod},
+           given={E},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {IOP Publishing}%
+      }
+      \strng{namehash}{5c7efd4d4e178d14874b6533b7183da1}
+      \strng{fullhash}{06f48ed694b08fd07e80ff991aed7cc1}
+      \strng{bibnamehash}{5c7efd4d4e178d14874b6533b7183da1}
+      \strng{authorbibnamehash}{5c7efd4d4e178d14874b6533b7183da1}
+      \strng{authornamehash}{5c7efd4d4e178d14874b6533b7183da1}
+      \strng{authorfullhash}{06f48ed694b08fd07e80ff991aed7cc1}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Physics: Conference Series}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{Dynamic Modeling and Simulation of a Rotational Inverted Pendulum}
+      \field{volume}{792}
+      \field{year}{2017}
+      \field{pages}{012081}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1088/1742-6596/792/1/012081
+      \endverb
+      \verb{urlraw}
+      \verb https://dx.doi.org/10.1088/1742-6596/792/1/012081
+      \endverb
+      \verb{url}
+      \verb https://dx.doi.org/10.1088/1742-6596/792/1/012081
+      \endverb
+    \endentry
+    \entry{Furuta1992}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=d2c653ebab21ec82abd3219c3e223722}{%
+           family={Furuta},
+           familyi={F\bibinitperiod},
+           given={K},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a30a338c13350efe8acf0cf227e1834c}{%
+           family={Yamakita},
+           familyi={Y\bibinitperiod},
+           given={M},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e4b3bf28b71a7d97be83f2c6699fc681}{%
+           family={Kobayashi},
+           familyi={K\bibinitperiod},
+           given={S},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \strng{fullhash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \strng{bibnamehash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \strng{authorbibnamehash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \strng{authornamehash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \strng{authorfullhash}{91663b9f23a79cd89913285b1a2a0ef3}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the Institution of Mechanical Engineers, Part I: Journal of Systems and Control Engineering}
+      \field{number}{4}
+      \field{title}{Swing-up Control of Inverted Pendulum Using Pseudo-State Feedback}
+      \field{volume}{206}
+      \field{year}{1992}
+      \field{pages}{263\bibrangedash 269}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1243/PIME\_PROC\_1992\_206\_341\_02
+      \endverb
+      \verb{eprint}
+      \verb https://doi.org/10.1243/PIME_PROC_1992_206_341_02
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1243/PIME_PROC_1992_206_341_02
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1243/PIME_PROC_1992_206_341_02
+      \endverb
+    \endentry
+    \entry{houck2013}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=bf08e4d5f0c5de0b25fce8f9ee44142c}{%
+           family={Houck},
+           familyi={H\bibinitperiod},
+           given={Andrew\bibnamedelima Careaga},
+           giveni={A\bibinitperiod\bibinitdelim C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f123a8a9841898ab0e50cac72022d304}{%
+           family={Katzschmann},
+           familyi={K\bibinitperiod},
+           given={Robert\bibnamedelima Kevin},
+           giveni={R\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8d3e5331681769fd001f246ccf8a5464}{%
+           family={Souza},
+           familyi={S\bibinitperiod},
+           given={Joao\bibnamedelimb Luiz\bibnamedelima Almeida},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{597f6a6251c885c3039db93d2c5279bf}
+      \strng{fullhash}{597f6a6251c885c3039db93d2c5279bf}
+      \strng{bibnamehash}{597f6a6251c885c3039db93d2c5279bf}
+      \strng{authorbibnamehash}{597f6a6251c885c3039db93d2c5279bf}
+      \strng{authornamehash}{597f6a6251c885c3039db93d2c5279bf}
+      \strng{authorfullhash}{597f6a6251c885c3039db93d2c5279bf}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Department of Mechanical Engineering, Massachusetts Institute of Technology}
+      \field{title}{Furuta pendulum}
+      \field{volume}{2}
+      \field{year}{2013}
+    \endentry
+    \entry{mathew2013}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=6fa45ca2973594c479db115ccc1ce171}{%
+           family={Mathew},
+           familyi={M\bibinitperiod},
+           given={Navin\bibnamedelima John},
+           giveni={N\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a50f203a432a9ba7002c676d16863a0b}{%
+           family={Rao},
+           familyi={R\bibinitperiod},
+           given={K\bibnamedelima Koteswara},
+           giveni={K\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=854f4dcc8c585f23e73dba4bc8092bdf}{%
+           family={Sivakumaran},
+           familyi={S\bibinitperiod},
+           given={N},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{ad677fcbea34882ed81872431e017df2}
+      \strng{fullhash}{ad677fcbea34882ed81872431e017df2}
+      \strng{bibnamehash}{ad677fcbea34882ed81872431e017df2}
+      \strng{authorbibnamehash}{ad677fcbea34882ed81872431e017df2}
+      \strng{authornamehash}{ad677fcbea34882ed81872431e017df2}
+      \strng{authorfullhash}{ad677fcbea34882ed81872431e017df2}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IFAC Proceedings Volumes}
+      \field{number}{32}
+      \field{title}{Swing up and stabilization control of a rotary inverted pendulum}
+      \field{volume}{46}
+      \field{year}{2013}
+      \field{pages}{654\bibrangedash 659}
+      \range{pages}{6}
+    \endentry
+    \entry{Nath2014}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d3295631479480100881a0286e5e653f}{%
+           family={Nath},
+           familyi={N\bibinitperiod},
+           given={Vishwa},
+           giveni={V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ea453791f76fde1a0747833b2bdfa9dc}{%
+           family={Mitra},
+           familyi={M\bibinitperiod},
+           given={R},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Chandigarh, India}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \strng{fullhash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \strng{bibnamehash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \strng{authorbibnamehash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \strng{authornamehash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \strng{authorfullhash}{a007ade977b2597f5e92b7d3ecbf07f1}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2014 Recent Advances in Engineering and Computational Sciences ({RAECS})}
+      \field{month}{3}
+      \field{title}{Swing-up and control of Rotary Inverted Pendulum using pole placement with integrator}
+      \field{year}{2014}
+    \endentry
+    \entry{Ogata2010}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=72cb1e667ce543119df1b777c0db24de}{%
+           family={Ogata},
+           familyi={O\bibinitperiod},
+           given={Katsuhiko},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Prentice hall}%
+      }
+      \strng{namehash}{72cb1e667ce543119df1b777c0db24de}
+      \strng{fullhash}{72cb1e667ce543119df1b777c0db24de}
+      \strng{bibnamehash}{72cb1e667ce543119df1b777c0db24de}
+      \strng{authorbibnamehash}{72cb1e667ce543119df1b777c0db24de}
+      \strng{authornamehash}{72cb1e667ce543119df1b777c0db24de}
+      \strng{authorfullhash}{72cb1e667ce543119df1b777c0db24de}
+      \field{sortinit}{O}
+      \field{sortinithash}{2cd7140a07aea5341f9e2771efe90aae}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Modern control engineering}
+      \field{year}{2010}
+    \endentry
+    \entry{spong2008}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=1e0c4c9e500fcb5128a2bb73fbbe891a}{%
+           family={Spong},
+           familyi={S\bibinitperiod},
+           given={Mark\bibnamedelima W},
+           giveni={M\bibinitperiod\bibinitdelim W\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f17f8477c0dfc75bf3c2a315877f0320}{%
+           family={Vidyasagar},
+           familyi={V\bibinitperiod},
+           given={Mathukumalli},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \strng{fullhash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \strng{bibnamehash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \strng{authorbibnamehash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \strng{authornamehash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \strng{authorfullhash}{b278aad6cbcbe3ee45cb2f00d72a3838}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Robot dynamics and control}
+      \field{year}{2008}
+    \endentry
+    \entry{yamane2021}{article}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=0d49837cc4a7d842a43295c6caa9b62e}{%
+           family={Yamane},
+           familyi={Y\bibinitperiod},
+           given={Lucas\bibnamedelimb de\bibnamedelima Souza},
+           giveni={L\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Brasil}%
+      }
+      \strng{namehash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \strng{fullhash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \strng{bibnamehash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \strng{authorbibnamehash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \strng{authornamehash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \strng{authorfullhash}{1913d15ec14d701d09b0d43c02c2d0b0}
+      \field{sortinit}{Y}
+      \field{sortinithash}{fd67ad5a9ef0f7456bdd9aab10fe1495}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Projeto mecânico e síntese do controlador de um pêndulo de Furuta}
+      \field{year}{2021}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
