@@ -18,6 +18,7 @@
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{graphicx}
+\usepackage{siunitx}
 
 %% Spanish babel recomendation
 % \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel} 
@@ -205,10 +206,10 @@
 
     \subsection{Componentes Eletrônicos}
     \begin{itemize}
-        \item \textbf{Microcontrolador:} Arduino Uno R3, utilizado para controle do sistema de balanceamento e leitura dos sensores.
-        \item \textbf{Motor com Encoder:} JGA25-371 12V DC 18-1930RPM, motor DC com encoder incremental para acionar o pêndulo e medir o ângulo.
-        \item \textbf{Driver de Motor (Ponte H):} BTS7960, utilizado para controlar a direção e a velocidade do motor.
-        \item \textbf{Encoder Incremental:} E38S6G5-600B-G24N, para medir a posição do pêndulo e enviar os dados de feedback para o microcontrolador.
+        \item \textbf{Microcontrolador:} Esp32 \cite{esp32Datasheet}, utilizado para controle do sistema de balanceamento e leitura dos sensores.
+        \item \textbf{Motor com Encoder:} JGA25-371 12V DC 18-1930RPM \cite{mot4datasheet}, motor DC com encoder incremental para acionar o pêndulo e medir o ângulo.
+        \item \textbf{Driver de Motor (Ponte H):} BTS7960 \cite{bts7960datasheet}, utilizado para controlar a direção e a velocidade do motor.
+        \item \textbf{Encoder Incremental:} E38S6G5-600B-G24N \cite{e38s6g5datasheet}, para medir a posição do pêndulo e enviar os dados de feedback para o microcontrolador.
         \item \textbf{Fonte de Alimentação:} Fonte de 12V para alimentar os motores, encoder e o microcontrolador.
     \end{itemize}
 
@@ -229,28 +230,56 @@
         \centering
         \caption{Lista de Peças Utilizadas na Construção do Protótipo}
         \label{tab:lista_pecas}
-        \begin{tabular}{lll}
+        \begin{tabular}{lllll}
             \toprule
-            \textbf{Número} & \textbf{Peça} & \textbf{Quantidade} \\
+            \textbf{Número} & \textbf{Peça} & \textbf{Qtd}  & \textbf{Preço} \\
             \midrule
-            1  & Topo                    & 1  \\
-            2  & Base                    & 1  \\
-            3  & Suporte                 & 4  \\
-            4  & Braço                   & 1  \\
-            5  & Encoder Incremental     & 1  \\
-            6  & Motor com Encoder       & 1  \\
-            7  & Pêndulo                 & 1  \\
-            8  & Parafuso M3x6           & 5  \\
-            9  & Parafuso M6x25          & 8  \\
-            10 & Ponte H                 & 1  \\
-            11 & Arduino Uno R3          & 1  \\
+            1  & Topo                    & 1   & R\$ - \\
+            2  & Base                    & 1   & R\$ - \\
+            3  & Suporte                 & 4   & R\$ - \\
+            4  & Braço                   & 1   & R\$ - \\
+            5  & Encoder Incremental     & 1   & R\$ 80,34 \\
+            6  & Motor com Encoder       & 1   & R\$ 55,17 \\
+            7  & Pêndulo                 & 1   & R\$ - \\
+            8  & Parafuso M3x6           & 5   & R\$ 2,00 \\
+            9  & Parafuso M6x25          & 8   & R\$ 4,00 \\
+            10 & Ponte H                 & 1   & R\$ 31,56 \\
+            11 & Esp Wroom 32            & 1   & R\$ 33,04 \\
+            Total & -                    & -   & R\$ 206,11 \\
             \bottomrule
         \end{tabular}
         \caption*{Note: A quantidade dos componentes foi estimada com base no modelo 3D e pode ser ajustada durante a montagem.}
     \end{table}
-    
+    \vspace{-6mm}
+    \subsection{Descrição do Circuito e Ligações}
 
-\vspace{-6mm}
+    O circuito do sistema é composto por um microcontrolador ESP32 DevKit, responsável pelo controle do motor, leitura dos encoders e execução dos algoritmos de estabilização do pêndulo. A Figura~\ref{fig:circuito} ilustra as conexões entre os principais componentes.
+
+    A alimentação principal é fornecida por uma fonte de \SI{12}{\volt}, que alimenta diretamente o driver de motor BTS7960 pelos terminais \texttt{B+} e \texttt{B-}. O mesmo GND da fonte é compartilhado com o GND do ESP32 para garantir a referência comum entre os sinais de controle e potência.
+
+    O motor DC com encoder Hall integrado é conectado ao BTS7960 pelos terminais \texttt{M+} e \texttt{M-}, responsáveis pela potência do motor, e também por quatro fios adicionais que compõem o encoder Hall:
+    \begin{itemize}
+        \item \textbf{VCC (vermelho)} – Alimentação de \SI{5}{\volt} fornecida pelo pino \texttt{VIN} do ESP32.
+        \item \textbf{GND (preto)} – Terra comum ao ESP32 e à fonte.
+        \item \textbf{Canal A} – Ligado ao pino \texttt{GPIO34} do ESP32 (entrada apenas), utilizado para leitura de pulsos do encoder.
+        \item \textbf{Canal B} – Ligado ao pino \texttt{GPIO35} do ESP32 (entrada apenas), utilizado para determinar o sentido de rotação.
+    \end{itemize}
+
+    O pêndulo é instrumentado com um encoder incremental E38S6G5-600B-G24N, que possui saída de dois canais (A e B) em quadratura. Esses sinais são conectados aos pinos \texttt{GPIO32} e \texttt{GPIO33} do ESP32, permitindo a leitura da posição angular e do sentido de movimento.
+
+    O controle de velocidade e direção do motor é realizado via sinais PWM gerados pelo ESP32:
+    \begin{itemize}
+        \item \textbf{RPWM} – Pino \texttt{GPIO25}, responsável pelo controle de rotação em sentido horário.
+        \item \textbf{LPWM} – Pino \texttt{GPIO26}, responsável pelo controle de rotação em sentido anti-horário.
+        \item \textbf{EN-R} e \textbf{EN-L} – Pinos \texttt{GPIO27} e \texttt{GPIO14}, respectivamente, usados para habilitar os canais do driver (podendo ser fixados em nível lógico alto se não for necessário controle via software).
+    \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\columnwidth]{figures/circuito.png}
+        \caption{Diagrama do circuito do pêndulo invertido rotacional com ESP32, BTS7960, motor DC com encoder Hall e encoder incremental do pêndulo.}
+        \label{fig:circuito}
+    \end{figure}
 
 
 \subsection{Ambiente de Software}
