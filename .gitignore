@@ -1,6 +1,9 @@
+example.m
+
 # Arquivos auxiliares gerados pelo LaTeX
 *.aux
 *.bbl
+*.bbl-SAVE-ERROR
 *.bcf
 *.blg
 *.fdb_latexmk
