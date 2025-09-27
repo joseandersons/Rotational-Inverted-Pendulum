@@ -109,27 +109,25 @@
     apresentadas na tabela a seguir:
 
     \begin{table}[H]
-        \centering
-        \caption{Variáveis e parâmetros físicos do pêndulo invertido rotacional}
-        \begin{tabular}{llll}
-            \toprule
-            \textbf{Variável / Parâmetro} & \textbf{Símbolo} \\
-            \midrule
-            Torque aplicado pelo motor  &  $\tau$ \\
-            Ângulo de rotação da base  &  $\theta_0$ \\
-            Ângulo do pêndulo  &  $\theta_1$ \\
-            Velocidade angular do braço  &  $\omega_0$ \\
-            Velocidade angular do pêndulo  &  $\omega_1$ \\
-            Massa do braço  &  $m_0$ \\
-            Massa do pêndulo  &  $m_1$ \\
-            Comprimento do braço  &  $L_0$ \\
-            Comprimento do pêndulo  &  $L_1$ \\
-            Momento de inércia do braço  &  $I_0$ \\
-            Momento de inércia do pêndulo  &  $I_1$ \\
-            Constante gravitacional  &  $g$ \\
-            \bottomrule
-        \end{tabular}
-    \end{table}
+    \centering
+    \caption{Símbolos para descrever os parâmetros das equações}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Símbolo} & \textbf{Descrição} \\
+        \midrule
+        $L$   & Distância até o centro de massa do pêndulo \\
+        $m$   & Massa do braço do pêndulo \\
+        $r$   & Comprimento do braço rotativo \\
+        $\theta$ & Ângulo do braço do pêndulo (rad) \\
+        $\alpha$ & Ângulo do pêndulo (rad) \\
+        $h$   & Distância do centro de massa do pêndulo até o solo \\
+        $J_{cm}$ & Inércia do pêndulo em relação ao seu centro de massa \\
+        $V_{x}$  & Velocidade do centro de massa do pêndulo na direção $x$ \\
+        $V_{y}$  & Velocidade do centro de massa do pêndulo na direção $y$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 
 \begin{figure}[H]
         \centering
@@ -143,12 +141,71 @@ O objetivo desta etapa é a obtenção do modelo matemático que descreve a din�
 análisar o modelo obtido e simular através do software MATLAB/Simulink.
 
 \section{Modelagem Matemática}
-\begin{itemize}
-    \item Aplicação das leis da física (Leis de Newton, Lagrange, etc.) para derivar as equações diferenciais que regem o comportamento do sistema.
-    \item Linearização do modelo em torno de um ponto de operação, se necessário.
-    \item Obtenção da função de transferência $G(s)$ do sistema, relacionando a entrada e a saída.
-    \item Apresentação do diagrama de blocos do sistema em malha aberta.
-\end{itemize}
+
+A modelagem matemática do pêndulo invertido rotacional é obtida aplicando o 
+método de Euler-Lagrange. Inicialmente, consideram-se as velocidades do 
+centro de massa do pêndulo e do braço rotativo:
+
+\begin{equation}
+    V_{Pen.\,cm} = -L \cos (\alpha) \, \dot{\alpha} \, \hat{x} - L \sin (\alpha) \, \dot{\alpha} \, \hat{y}
+\end{equation}
+
+\begin{equation}
+    V_{arm} = r \dot{\theta}
+\end{equation}
+
+Assim, as componentes de velocidade do centro de massa do pêndulo podem ser escritas como:
+\begin{align}
+    V_x &= r\dot{\theta} - L\cos\alpha \, \dot{\alpha} \\
+    V_y &= -L\sin\alpha \, \dot{\alpha}
+\end{align}
+
+\subsection{Energia Potencial}
+A única energia potencial no sistema é a gravitacional:
+\begin{equation}
+    V = m g h = m g L \cos \alpha
+\end{equation}
+
+\subsection{Energia Cinética}
+As energias cinéticas são devidas ao movimento do braço, ao movimento do centro 
+de massa do pêndulo e à rotação do pêndulo em torno do seu próprio centro de massa:
+\begin{equation}
+    T = \tfrac{1}{2} J_{eq} \dot{\theta}^2 
+        + \tfrac{1}{2} m (r \dot{\theta} - L \cos\alpha \dot{\alpha})^2
+        + \tfrac{1}{2} m (-L \sin\alpha \dot{\alpha})^2
+        + \tfrac{1}{2} J_{cm} \dot{\alpha}^2
+\end{equation}
+
+O momento de inércia do pêndulo em relação ao seu centro de massa é dado por:
+\begin{equation}
+    J_{cm} = \frac{1}{3} m L^2
+\end{equation}
+
+\subsection{Lagrangiana}
+Assim, a Lagrangiana é escrita como:
+\begin{equation}
+    \mathcal{L} = T - V
+\end{equation}
+
+Expandindo:
+\begin{equation}
+    \mathcal{L} = \tfrac{1}{2} J_{eq} \dot{\theta}^2 
+        + \tfrac{2}{3} m L^2 \dot{\alpha}^2
+        - m L r \cos \alpha \, \dot{\alpha}\dot{\theta}
+        + \tfrac{1}{2} m r^2 \dot{\theta}^2
+        - m g L \cos \alpha
+\end{equation}
+
+\subsection{Equações de Movimento}
+As coordenadas generalizadas são $\theta$ e $\alpha$, de forma que o sistema 
+pode ser descrito por:
+
+\begin{align}
+    (J_{eq} + m r^2)\ddot{\theta} - m L r \ddot{\alpha} 
+    &= T_{output} - B_{eq} \dot{\theta} \\
+    \tfrac{4}{3} m L^2 \ddot{\alpha} - m L r \ddot{\theta} - m g L \alpha &= 0
+\end{align}
+
 
 \section{Análise do Modelo}
 \begin{itemize}
