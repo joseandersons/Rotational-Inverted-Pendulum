@@ -1,20 +1,10 @@
-run(".\scripts\parameters.m"); 
+run("./sim_furuta/scripts/ss_to_tf.m"); % Executa o script para obter tf a partir de espaço de estados
 
-run(".\scripts\TdF.m");
+figure;
+impulse(G_pendulum); % Plota a resposta ao impulso da tf obtida
 
-step(G);
+figure;
+step(G_pendulum); % Plota a respota ao degrau da tf obtida
 
-impulse(G);
-
-pzmap(G) 
-Grid on
-
-%{
-t = 0:0.05:40;      % vetor de tempo
-u = t;              % entrada rampa
-y = lsim(G,u,t);    % resposta do sistema
-plot(t,y)
-xlabel('Tempo (s)')
-ylabel('Saída')
-title('Resposta à Rampa')
-%}
+figure;
+pzmap(G_pendulum); % Plota os polos e zeros da tf obtida
