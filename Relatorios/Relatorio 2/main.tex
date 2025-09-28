@@ -514,11 +514,42 @@ transformada de Laplace da tensão aplicada ao motor.
 
 
 
-
 \section{Análise do Modelo}
+Após a obtenção da função de transferência que descreve a dinâmica entre a entrada $V_m(s)$ (tensão aplicada ao motor) e a saída $\alpha(s)$ (ângulo do pêndulo), procede-se à análise matemática do sistema em malha aberta. Essa análise permite caracterizar propriedades fundamentais, como ordem e grau relativo, localização dos polos e zeros, estabilidade intrínseca e comportamento esperado diante de diferentes entradas. Embora ainda não haja controle implementado, esta etapa é essencial para compreender as limitações naturais do sistema e justificar a necessidade de técnicas de estabilização.
+\subsection{Ordem e grau relativo}
 \begin{itemize}
-    \item Análise teórica da estabilidade do sistema em malha aberta (análise dos polos da função de transferência).
-    \item Previsão do comportamento dinâmico do sistema a partir do modelo (análise de resposta a degrau, rampa, etc.).
+    \item \textbf{Ordem do sistema:} 3 (denominador de grau 3) — sistema de 3ª ordem.
+    \item \textbf{Grau do numerador:} 1.
+\end{itemize}
+
+\subsection{Polos e estabilidade}
+As raízes do denominador (polos) obtidos numericamente são aproximadamente:
+\[
+p_1 \approx -17.12,\qquad p_2 \approx -4.94,\qquad p_3 \approx +7.54.
+\]
+Como existe um polo em \(\,p_3 \approx +7.54\) (semiplano direito), o sistema é \textbf{instável em malha aberta}. Em termos práticos, qualquer pequena perturbação tenderá a crescer exponencialmente se não houver controle.
+A raiz do numerador (zero) é aproximadamente:
+\[
+z \approx +9.76\times 10^{-5}.
+\]
+O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (undershoot). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
+
+No entanto, como o sistema é instável, essa resposta inversa inicial seria rapidamente dominada e mascarada pelo crescimento exponencial causado pelo polo instável.
+
+\subsection{Ganho DC}
+O ganho estático do sistema é:
+\[
+G(0)=\frac{-0.0024}{-637.752}\approx 3.76\times 10^{-6}.
+\]
+O valor é muito pequeno, mas na prática a dinâmica é dominada pelo polo instável.
+
+\subsection{Tipo do sistema}
+Não há polos em $s=0$, logo o sistema é do \textbf{tipo 0}. Em teoria isso significa erro finito para entrada em degrau, mas devido à instabilidade, em malha aberta a saída tende a divergir.
+
+\subsection{Observações finais}
+\begin{itemize}
+    \item O polo no semiplano direito torna o sistema instável em malha aberta.
+    \item O zero no semiplano direito impõe dificuldades na modelagem de um controlador 
 \end{itemize}
 
 \section{Simulação Computacional}
