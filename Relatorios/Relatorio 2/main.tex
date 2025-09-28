@@ -331,7 +331,7 @@ Após aplicar as equações de Lagrange para $\theta$ e $\alpha$, e linearizar e
 O torque de saída do motor aplicado ao sistema é dado por:
 \begin{equation}
     T_{output} = \frac{\eta_m \eta_g K_t K_g}{R_m} \left( V_m - K_G K_m \dot{\theta} \right) 
-    \tag{26}
+    \label{eq:torque}
 \end{equation}
 
 Combinando as equações de movimento obtidas, a representação em espaço de estados pode ser escrita como:
@@ -359,7 +359,7 @@ Combinando as equações de movimento obtidas, a representação em espaço de e
 \tfrac{c \, \eta_m \eta_g K_t K_g}{R_m E} \\
 \tfrac{b \, \eta_m \eta_g K_t K_g}{R_m E}
 \end{bmatrix} V_m
-\tag{27}
+\label{eq:estado}
 \end{equation}
 
 onde os parâmetros são definidos como:
@@ -369,28 +369,7 @@ c &= \tfrac{4}{3} mL^2, & d &= mgL, \\
 E &= ac - b^2, & G &= \tfrac{\eta_m \eta_g K_t K_m K_g^2}{R_m} - B_{eq}
 \end{align*}
 
-A Tabela~\ref{tab:parametros} apresenta os parâmetros utilizados para o sistema SRV02:
-
-\begin{table}[H]
-\centering
-\caption{Parâmetros típicos do sistema SRV02 e do pêndulo}
-\label{tab:parametros}
-\begin{tabular}{lll}
-\toprule
-\textbf{Símbolo} & \textbf{Descrição} & \textbf{Valor} \\
-\midrule
-$K_t$ & Constante de torque do motor & 0.00767 \\
-$K_m$ & Constante de FEM inversa & 0.00767 \\
-$R_m$ & Resistência de armadura & 2.6 \\
-$K_g$ & Relação de engrenagem & 14 (14:1) \\
-$\eta_m$ & Eficiência do motor & 0.69 \\
-$\eta_g$ & Eficiência da caixa de engrenagem & 0.9 \\
-$B_{eq}$ & Coef. de atrito viscoso equivalente & $1.5 \times 10^{-3}$ \\
-$J_{eq}$ & Momento de inércia equivalente & $9.31 \times 10^{-4}$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
+A Tabela~\ref{tab:parametros} apresenta os parâmetros utilizados para o sistema SRV02.
 \subsection{Modelo Numérico em Espaço de Estados}
 
 Substituindo os valores da Tabela~\ref{tab:parametros}, obtemos o modelo em espaço de estados numérico:
@@ -416,7 +395,7 @@ Substituindo os valores da Tabela~\ref{tab:parametros}, obtemos o modelo em espa
 \begin{bmatrix}
 0 \\ 0 \\ 25.54 \\ 24.59
 \end{bmatrix} V_m
-\tag{28}
+\label{eq:estadoNum}
 \end{equation}
 
 E a saída é dada por:
@@ -433,14 +412,13 @@ Y =
 \begin{bmatrix}
 0 \\ 0
 \end{bmatrix} V_m
-\tag{29}
 \end{equation}
 
 \subsection{Obtenção da Função de Transferência}
 
 A partir do modelo em espaço de estados (Eq.~\ref{eq:estadoNum}), pode-se obter a 
 função de transferência que relaciona a entrada do sistema (tensão no motor $V_m$) 
-com a saída escolhida (ângulo do pêndulo $\alpha$).Para isso, foi utilizada a 
+com a saída escolhida (ângulo do pêndulo $\alpha$). Para isso, foi utilizada a 
 função \texttt{tf()} do \textit{MATLAB}, que converte a representação em espaço 
 de estados para a forma de função de transferência.
 
@@ -475,7 +453,7 @@ A = [0 0 1 0;
 
 B = [0; 0; 25.54; 24.59];
 
-C = [0 1 0 0];   % Saída = ângulo do pêndulo (α)
+C = [0 1 0 0];   % Saída = ângulo do pêndulo ($\alpha$)
 D = 0;
 
 sys_ss = ss(A, B, C, D);  % Espaço de estados
@@ -487,10 +465,12 @@ dinâmica do sistema:
 
 \begin{equation}
     G(s) = \frac{\alpha(s)}{V_m(s)}
+          = \frac{24.59\,s - 0.0024}{s^3 + 14.52\,s^2 - 81.78\,s - 637.8}
 \end{equation}
 
 onde $\alpha(s)$ é a transformada de Laplace do ângulo do pêndulo e $V_m(s)$ é a 
 transformada de Laplace da tensão aplicada ao motor.
+
 
 
 
