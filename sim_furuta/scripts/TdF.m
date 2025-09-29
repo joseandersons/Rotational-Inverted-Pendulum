@@ -14,4 +14,4 @@ denominator = [a, b, d, c];
 
 sys = tf(numerator, denominator);
 
-[num, den] = tfdata(G, 'v'); 
+[num, den] = tfdata(sys, 'v'); 
