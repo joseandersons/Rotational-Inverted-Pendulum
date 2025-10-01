@@ -541,9 +541,15 @@ A raiz do numerador (zero) é aproximadamente:
 \[
 z \approx +9.76\times 10^{-5}.
 \]
-O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (undershoot). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
 
-No entanto, como o sistema é instável, essa resposta inversa inicial seria rapidamente dominada e mascarada pelo crescimento exponencial causado pelo polo instável.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/polos_e_zeros.png}
+    \caption{Mapa polo-zero do sistema, com polos (X) e zeros (O) destacados numericamente.}
+    \label{fig:pzmap}
+\end{figure}
+
+O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (\textit{undershoot}). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
 
 \subsection{Ganho DC}
 O ganho estático do sistema é:
@@ -569,7 +575,7 @@ A resposta a um impulso unitário, que representa a reação do sistema a uma pe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/impulse_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/impulse_response.png}
     \caption{Resposta ao impulso do sistema em malha aberta.}
     \label{fig:impulse}
 \end{figure}
@@ -579,7 +585,7 @@ A aplicação de uma entrada em degrau, que equivale a fornecer uma tensão cons
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/step_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/step_response.png}
     \caption{Resposta ao degrau do sistema em malha aberta.}
     \label{fig:step}
 \end{figure}
@@ -589,7 +595,7 @@ A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/ramp_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/ramp_response.png}
     \caption{Resposta à rampa do sistema em malha aberta.}
     \label{fig:ramp}
 \end{figure}
