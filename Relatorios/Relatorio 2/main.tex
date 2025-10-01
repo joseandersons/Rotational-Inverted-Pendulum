@@ -144,6 +144,15 @@ análisar o modelo obtido e simular através do software MATLAB/Simulink.
 
 \section{Modelagem Matemática}
 
+A compreensão precisa da dinâmica do Pêndulo de Furuta exige uma formulação matemática rigorosa. Antes de prosseguir com a derivação das equações de movimento, é fundamental estabelecer a convenção de coordenadas adotada. Conforme ilustrado na Figura~\ref{fig:angulo_pendulo}, o ângulo de rotação do braço horizontal é denotado por \(\theta\). O ponto crucial para a estabilização é a definição do ângulo \(\alpha\) do pêndulo em relação à vertical: o estado de interesse, onde o pêndulo se encontra na posição invertida (verticalmente para cima), corresponde explicitamente a \(\alpha = 0\). Essa definição é vital para a interpretação dos resultados de controle e para a linearização do sistema em torno deste ponto de equilíbrio instável.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{figures/angulo_pendulo.png} % Ajustado para columnwidth
+    \caption{Definição das variáveis angulares do Pêndulo de Furuta, com o ângulo do braço \(\theta\) e o ângulo do pêndulo \(\alpha\). A posição de equilíbrio instável (\(\alpha=0\)) é indicada.}
+    \label{fig:angulo_pendulo}
+\end{figure}
+
 A modelagem matemática do pêndulo invertido rotacional é obtida aplicando o 
 método de Euler-Lagrange. Inicialmente, consideram-se as velocidades do 
 centro de massa do pêndulo e do braço rotativo:
@@ -553,18 +562,44 @@ Não há polos em $s=0$, logo o sistema é do \textbf{tipo 0}. Em teoria isso si
 \end{itemize}
 
 \section{Simulação Computacional}
-\begin{itemize}
-    \item Implementação do modelo matemático em software (MATLAB/Simulink ou similar).
-    \item Apresentação dos resultados da simulação da resposta do sistema em malha aberta a diferentes sinais de entrada (degrau, impulso).
-    \item Discussão e análise crítica dos resultados da simulação.
-\end{itemize}
+Para validar e visualizar o comportamento dinâmico previsto pela análise matemática, o sistema foi simulado no ambiente \textit{MATLAB/Simulink}. Utilizando a função de transferência \(G(s)\) obtida, foram analisadas as respostas do sistema em malha aberta a três sinais de entrada canônicos: impulso, degrau e rampa. Essas simulações são fundamentais para confirmar a instabilidade inerente do pêndulo e compreender a natureza da sua resposta antes da implementação de qualquer estratégia de controle. O comportamento observado em todas as simulações reflete diretamente a presença do polo instável em \(s \approx +7.54\).
 
-\section{Conclusão Parcial}
-\begin{itemize}
-    \item Resumo dos resultados obtidos na modelagem e simulação.
-    \item Perspectivas para a próxima etapa de montagem e validação.
-\end{itemize}
+\subsection{Resposta ao Impulso}
+A resposta a um impulso unitário, que representa a reação do sistema a uma perturbação instantânea de energia, é apresentada na Figura~\ref{fig:impulse}. Como se pode observar, a saída (ângulo do pêndulo) diverge exponencialmente, confirmando a instabilidade do sistema em malha aberta. Uma perturbação mínima é suficiente para que o pêndulo inicie um movimento de queda do qual ele não consegue se recuperar autonomamente. Esse comportamento é totalmente consistente com o polo no semiplano direito, que domina a dinâmica do sistema.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/impulse_response.jpeg}
+    \caption{Resposta ao impulso do sistema em malha aberta.}
+    \label{fig:impulse}
+\end{figure}
+
+\subsection{Resposta ao Degrau}
+A aplicação de uma entrada em degrau, que equivale a fornecer uma tensão constante ao motor, também resulta em uma resposta instável, como ilustrado na Figura~\ref{fig:step}. A saída cresce de forma ilimitada, o que, fisicamente, corresponde à queda do pêndulo de forma acelerada. O resultado reforça que uma ação de controle constante é incapaz de estabilizar o sistema, evidenciando a necessidade de uma malha de realimentação que ajuste a entrada dinamicamente com base no estado do pêndulo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/step_response.jpeg}
+    \caption{Resposta ao degrau do sistema em malha aberta.}
+    \label{fig:step}
+\end{figure}
+
+\subsection{Resposta à Rampa}
+A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe uma divergência ainda mais acentuada. Este teste submete o sistema a uma solicitação de energia continuamente crescente, e a resposta instável se manifesta de forma mais rápida e agressiva. Embora seja um cenário menos comum na prática, a simulação confirma que o sistema em malha aberta é incapaz de seguir qualquer trajetória de referência, por mais simples que seja, reforçando a necessidade crítica de um controlador para a estabilização.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/ramp_response.jpeg}
+    \caption{Resposta à rampa do sistema em malha aberta.}
+    \label{fig:ramp}
+\end{figure}
+
+\section{Conclusão}
+Nesta etapa do projeto, o modelo matemático para o pêndulo invertido rotacional (Pêndulo de Furuta) foi obtido com sucesso. Partindo dos princípios da mecânica clássica e utilizando o método de Euler-Lagrange, foram derivadas as equações diferenciais não lineares que descrevem a dinâmica do sistema. Subsequentemente, o modelo foi linearizado em torno do ponto de equilíbrio instável (\(\alpha \approx 0\)) para se obter uma representação em espaço de estados e a correspondente função de transferência, relacionando a tensão de entrada do motor (\(V_m\)) com o ângulo do pêndulo (\(\alpha\)).
+
+A análise da função de transferência revelou características cruciais do sistema em malha aberta. Foi identificado que o sistema é de terceira ordem, do tipo 0, e, mais importante, intrinsecamente instável devido a um polo localizado no semiplano direito (\(p_3 \approx +7.54\)). Adicionalmente, a presença de um zero também no semiplano direito caracteriza o sistema como de fase não mínima, o que pode impor desafios ao projeto do controlador, como a ocorrência de uma resposta inversa inicial (\textit{undershoot}).
+
+As simulações computacionais do sistema em malha aberta para entradas de impulso, degrau e rampa confirmaram visualmente a instabilidade prevista pela análise teórica, com a saída divergindo exponencialmente em todos os cenários. Os resultados obtidos nesta etapa concluem a modelagem e a análise do sistema, fornecendo uma base sólida e indispensável para a próxima fase do projeto. A próxima etapa consistirá no projeto e implementação de um controlador em malha fechada com o objetivo de superar a instabilidade natural do sistema e manter o pêndulo estabilizado na posição vertical.
 
     % \begin{itemize}
     %     \item BREGANON, R. et al. Desenvolvimento de sistemas de pêndulos invertidos como ferramentas didáticas em cursos de engenharia de controle e automação. \textit{HOLOS}, v. 7, p. 1–14, 2021. DOI: 10.15628/holos.2021.10351.
