@@ -22,9 +22,9 @@ const float TAU  = 2.0f * (float)PI;
 float theta_deg = 0.0f;
 float zero_offset = 0.0f;
 
-float kp = 290.0f;
+float kp = 282.0f;
 float ki = 0.0f;
-float kd = 50.0f;
+float kd = 42.0f;
 
 float i_term = 0.0f;
 float prev_err = 0.0f;
