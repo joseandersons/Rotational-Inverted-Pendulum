@@ -8,3 +8,11 @@ step(G_pendulum); % Plota a respota ao degrau da tf obtida
 
 figure;
 pzmap(G_pendulum); % Plota os polos e zeros da tf obtida
+
+t = 0:0.1:10;
+input = t;
+figure; 
+lsim(G_pendulum, input, t)
+title("Ramp Response")
+ylabel("Amplitude"); 
+
