@@ -20,6 +20,7 @@
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{tikz}
+\usepackage{tabularx}
 \usetikzlibrary{arrows.meta, positioning}
 
 %% Spanish babel recomendation
@@ -272,6 +273,84 @@ fechada. Os objetivos específicos incluem: (i) montar o protótipo físico e co
 teórico; (ii) comparar qualitativa e quantitativamente as respostas real e simulada, analisando eventuais discrepâncias;
 (iii) projetar um controlador PID que atenda a requisitos de desempenho pré-definidos; (iv) implementar e testar o controlador
 no protótipo real; e (v) avaliar criticamente o desempenho do sistema controlado, comparando os resultados práticos com as simulações.
+
+\section{Montagem do Protótipo}
+
+Nesta seção é apresentada a montagem do protótipo físico do Pêndulo de Furuta desenvolvido neste projeto.
+São descritos, de forma detalhada, os procedimentos de construção da planta, incluindo a estrutura mecânica, acoplamento do encoder
+ao pêndulo e listagem dos componentes eletrônicos utilizados. Além disso, é apresentado o esquema de ligação elétrico final, bem
+como registros fotográficos do protótipo já montado. O objetivo é estabelecer documentação suficiente para permitir a reprodução da
+montagem realizada, garantindo rastreabilidade entre o projeto conceitual e a implementação prática.
+
+\subsection{Estrutura Mecânica}
+
+A estrutura mecânica do projeto, incluindo a base da planta, suportes e o braço rotacional horizontal foram totalmente fabricados utilizando
+impressão 3D. Além disso, parafusos foram utilizados para assegurar a fixação das partes mecânicas, garantindo a firmeza do sistema. 
+Para garantir o livre movimento do braço horizontal, o cabo do encoder foi fixado a estrutura do braço mecânico através de abraçadeiras plásticas,
+assim evitando enrolamento durante sua rotação. Adicionalmente, foi posicionado um grampo sargento entre a base e a superfície de apoio,
+a fim de evitar o deslocamento do sistema durante operação e garantir maior segurança durante testes.
+O pêndulo foi acoplado mecanicamente ao eixo do encoder, de maneira que não existam folgas perceptíveis, dessa forma assegurando que 
+toda a variação angular do pêndulo fosse refletida diretamente na leitura do sensor.
+
+\subsection{Componentes Eletrônicos e Funcionamento do Circuito}
+Os componentes eletrônicos utilizados na montagem final são listados na tabela \ref{tab:componentes}, a seguir:
+
+\begin{table}[H]
+\centering
+\caption{Componentes Eletrônicos}
+\label{tab:componentes}
+\begin{tabularx}{\columnwidth}{l c X}
+\toprule
+\textbf{Componente} & \textbf{Qtd.} & \textbf{Finalidade} \\
+\midrule
+ESP32 WROOM & 1 & Lógica de controle, obtenção de dados experimentais \\
+\midrule
+Encoder E38S6G5-600B-G24N & 1 & Leitura do ângulo do pêndulo \\
+\midrule
+Motor Driver LM298 & 1 & Interface de potência para o motor principal do sistema \\
+\midrule
+Motor JGA25-370 6V & 1 & Atua sobre braço e pêndulo rotacionais \\
+\midrule
+Fonte de bancada 8.3V & 1 & Alimentação da ponte H e do motor \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Para esse projeto, foi utilizado uma placa Esp32 WROOM responsável pelo controle do motor, leitura do encoder e implementação embarcada
+do controlador PID. A placa é alimentada via porta usb por um computador, e os sensores são alimentados utilizando a saída de 3.3V da ESP32. 
+Foi utilizada uma fonte de bancada, fornecendo 8.3V diretamente ao driver do motor LM298 pelo terminal $V_s$ (power suply) da ponte H. 
+O GND da fonte e da placa ESP32 são compartilhados, assim garantindo a mesma referência elétrica em todo o circuito. O diagrama completo do
+circuito pode ser verificado na imagem. 
+
+\subsection{Conexões}
+O motor JGA25-370 com encoder hall integrado é conectado aos terminais \textbf{OUT1} e \textbf{OUT2}, responsáveis pela velocidade do motor.
+A alimentação do encoder integrado, e a leitura dos canais A e B segue a seguinte pinagem:
+
+\begin{itemize}
+    \item $\mathbf{V_{CC}}$ (Azul): Conectado a saída de 3.3V da ESP32.
+    \item \textbf{GND} (Preto): Conectado ao terra comum a placa e fonte.
+    \item \textbf{CANAL A} (Amarelo): Conectado ao pino GPIO34.
+    \item \textbf{CANAL B} (Verde): Conectado ao pino GPIO35. 
+\end{itemize}
+
+É importante lembrar que a leitura do encoder integrado ao motor não esta sendo utilizada, devido a natureza \textbf{SISO} (Single Input Single Output)
+desejada. Porém, a conexão facilita um futuro incremento do projeto, considerando também o ângulo do braço horizontal, dessa forma
+caracterizando um sistema \textbf{MIMO} (Multiple Input Multiple Outpu). 
+
+O encoder incremental E38S6G5-600B-G24N que possui saída em dois canais, canal A e canal B, em quadratura, o que permite a leitura
+do ângulo do pêndulo. O canal A é conectado ao pino \textbf{GPIO33} e o canal B ao pino \textbf{GIPIO32}. A alimentação desse módulo é feita através
+da saída de 3.3V da ESP32. 
+
+O controle da velocidade e direção do motor é feita através do módulo LM298, por meio de sinal PWM e dos canais \textbf{IN1} e
+\textbf{IN2} do driver em questão. Além disso, as saídas \textbf{OUT1} e \textbf{OUT2} são ligadas aos polos negativo e positivo
+do motor, respectivamente. A ponte H é alimentada pela fonte de bancada com 8.3V na sua entrada $V_{C}$ e aterrada ao GND comum do
+circuito. Os seguintes pinos da ESP32 se conectam ao módulo:
+
+\begin{itemize}
+    \item \textbf{GPTIO25} (PWM): Responsável pelo controle da velocidade do motor. 
+    \item \textbf{GPIO18} e \textbf{GPIO19}: Conectados a IN1 e IN2, respectivamente. São reponsáveis pelo controle da direção do motor. 
+\end{itemize}
+
 
 \printbibliography
 
