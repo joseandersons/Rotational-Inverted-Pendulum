@@ -22,6 +22,10 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
 
+\journalname{Relatório de Sistemas de Controle I}
+\title{Pêndulo Invertido Rotacional (Furuta): Modelagem, Análise, Simulação e Implementação}
+
+
 %% Spanish babel recomendation
 % \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel} 
 
@@ -66,14 +70,16 @@
 % ABSTRACT AND KEYWORDS
 %----------------------------------------------------------
 
-\begin{abstract}    
-    Este relatório trata da segunda etapa do projeto da disciplina de Sistemas de Controle I,
-    de um pêndulo invertido rotacional. É apresentado, em primeira instância, as equações diferenciais
-    de movimento do pêndulo obtidas através do método Euler-Lagrange \cite{ramos2011rotary}, 
-    linearização do modelo e obtenção da função de transferência. Em seguida, a estabilidade do sistema é analisada, 
-    assim como a resposta do modelo a diferentes entradas, a fim de prever seu comportamento. 
-    Por fim, o software MATLAB/Simulink é utilizado para simular o sistema em malha aberta e os resultados são discutidos. 
+\begin{abstract}
+Este relatório apresenta uma visão abrangente do desenvolvimento de um pêndulo invertido rotacional (Pêndulo de Furuta), 
+cobrindo da modelagem matemática à implementação embarcada. Inicialmente descrevemos o sistema físico, suas variáveis e particularidades 
+(instabilidade intrínseca e subatua\-ção). Em seguida, derivamos o modelo via Euler–Lagrange, linearizamos no equilíbrio invertido, e obtemos 
+as formas em espaço de estados e função de transferência. A partir do modelo, analisamos estabilidade, polos/zeros e propriedades de fase, e 
+realizamos simulações em MATLAB/Simulink (respostas a impulso, degrau e rampa) que evidenciam a instabilidade em malha aberta. Também documentamos a 
+montagem do protótipo (estrutura 3D, eletrônica e conexões), além do ambiente de software. Por fim, apresentamos uma implementação prática de controle 
+(PID/PD) com telemetria embarcada e discutimos limitações, resultados e direções futuras (LQR/MPC). 
 \end{abstract}
+
 
 
 %----------------------------------------------------------
@@ -106,23 +112,23 @@
 
     \subsection{Arquiteturas}
 
-    Na literatura, é possível encontrar duas arquiteturas principais de pêndulos invertidos:
-    A linear (Figura~\ref{fig:pendulos}a), considerada a forma mais comum de pêndulo invertido, tem o pêndulo montado sobre uma base com um carrinho
-    que pode se movimentar livremente sobre um plano horizontal \cite{diao2016}; E o modelo rotacional (Figura~\ref{fig:pendulos}b), também conhecido
-    como Pêndulo de Furuta, onde o pêndulo está conectado a um braço giratório acionado por um motor. Este último representa 
-    um sistema subatuado e com maior complexidade dinâmica, sendo mais desafiador do ponto de vista de controle.
-
     \begin{figure}[H]
     \centering
     \caption{(a) Pêndulo Invertido Linear. (b) Pêndulo Invertido Rotacional.}
     \includegraphics[width=0.8\columnwidth]{figures/pendulos.png} 
     \label{fig:pendulos}
     \caption*{Fonte: \cite{Ogata2010} e \cite{Nath2014}.}
-\end{figure}
+    \end{figure}
 
     O Pêndulo de Furuta foi proposto por Katsuhita Furuta em 1992 no Instituto de Tecnologia de Tóquio \cite{houck2013},
     e tem sido amplamente utilizado em contextos acadêmicos e experimentais. Devido às suas características, o modelo 
     rotacional foi o escolhido neste projeto.
+
+    Na literatura, é possível encontrar duas arquiteturas principais de pêndulos invertidos:
+    A linear (Figura~\ref{fig:pendulos}a), considerada a forma mais comum de pêndulo invertido, tem o pêndulo montado sobre uma base com um carrinho
+    que pode se movimentar livremente sobre um plano horizontal \cite{diao2016}; E o modelo rotacional (Figura~\ref{fig:pendulos}b), também conhecido
+    como Pêndulo de Furuta, onde o pêndulo está conectado a um braço giratório acionado por um motor. Este último representa 
+    um sistema subatuado e com maior complexidade dinâmica, sendo mais desafiador do ponto de vista de controle.
 
     \subsection{Objetivo}
 
@@ -208,93 +214,141 @@
     Adicionalmente, será utilizada como referência complementar prática a obra “Modular Control of a Rotary Inverted Pendulum System” \cite{diao2016}, que apresenta uma abordagem didática e direta para implementação prática do controle de um pêndulo rotacional. Essa obra fornece os modelos dinâmicos (linear e não linear), parâmetros físicos e estratégias de controle PID e swing-up modulares, sendo ideal para aplicação em ambiente real e simulações no MATLAB/Simulink. Sua linguagem clara e foco na execução o fizeram um bom candidato para esse projeto.
 
 
-\section{Materiais e Métodos Propostos}
+\section{Montagem do Protótipo}
 
-    Para a implementação do sistema, serão utilizados os seguintes componentes, organizados em categorias de componentes eletrônicos e mecânicos.
+Nesta seção é apresentada a montagem do protótipo físico do Pêndulo de Furuta desenvolvido neste projeto.
+São descritos, de forma detalhada, os procedimentos de construção da planta, incluindo a estrutura mecânica, acoplamento do encoder
+ao pêndulo e listagem dos componentes eletrônicos utilizados. Além disso, é apresentado o esquema de ligação elétrico final, bem
+como registros fotográficos do protótipo já montado. O objetivo é estabelecer documentação suficiente para permitir a reprodução da
+montagem realizada, garantindo rastreabilidade entre o projeto conceitual e a implementação prática.
 
-    \subsection{Componentes Eletrônicos}
-    \begin{itemize}
-        \item \textbf{Microcontrolador:} Esp32 \cite{esp32Datasheet}, utilizado para controle do sistema de balanceamento e leitura dos sensores.
-        \item \textbf{Motor com Encoder:} JGA25-371 12V DC 18-1930RPM \cite{mot4datasheet}, motor DC com encoder incremental para acionar o pêndulo e medir o ângulo.
-        \item \textbf{Driver de Motor (Ponte H):} BTS7960 \cite{bts7960datasheet}, utilizado para controlar a direção e a velocidade do motor.
-        \item \textbf{Encoder Incremental:} E38S6G5-600B-G24N \cite{e38s6g5datasheet}, para medir a posição do pêndulo e enviar os dados de feedback para o microcontrolador.
-        \item \textbf{Fonte de Alimentação:} Fonte de 12V para alimentar os motores, encoder e o microcontrolador.
-    \end{itemize}
+\subsection{Componentes Mecânicos (Modelagem 3D)}
+\begin{itemize}
+    \item \textbf{Estrutura impressa em 3D:} A estrutura do protótipo será totalmente impressa em 3D, incluindo a base e os suportes necessários para o sistema de pêndulo.
+    \item \textbf{Parafusos:} Para fixação das partes mecânicas, serão usados parafusos, assegurando que os componentes fiquem firmemente montados.
+\end{itemize}
 
-    \subsection{Componentes Mecânicos}
-    \begin{itemize}
-        \item \textbf{Estrutura impressa em 3D:} A estrutura do protótipo será totalmente impressa em 3D, incluindo a base e os suportes necessários para o sistema de pêndulo.
-        \item \textbf{Parafusos:} Para fixação das partes mecânicas, serão usados parafusos, assegurando que os componentes fiquem firmemente montados.
-    \end{itemize}
-    
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.8\columnwidth]{figures/itens.png}
-        \caption{Esquema do Pêndulo Invertido Rotacional e seus Componentes.}
-        \label{fig:itens}
-    \end{figure}
-    
-    \begin{table}[H]
-        \centering
-        \caption{Lista de Peças Utilizadas na Construção do Protótipo}
-        \label{tab:lista_pecas}
-        \begin{tabular}{lllll}
-            \toprule
-            \textbf{Número} & \textbf{Peça} & \textbf{Qtd}  & \textbf{Preço} \\
-            \midrule
-            1  & Topo                    & 1   & R\$ - \\
-            2  & Base                    & 1   & R\$ - \\
-            3  & Suporte                 & 4   & R\$ - \\
-            4  & Braço                   & 1   & R\$ - \\
-            5  & Encoder Incremental     & 1   & R\$ 80,34 \\
-            6  & Motor com Encoder       & 1   & R\$ 55,17 \\
-            7  & Pêndulo                 & 1   & R\$ - \\
-            8  & Parafuso M3x6           & 5   & R\$ 2,00 \\
-            9  & Parafuso M6x25          & 8   & R\$ 4,00 \\
-            10 & Ponte H                 & 1   & R\$ 31,56 \\
-            11 & Esp Wroom 32            & 1   & R\$ 33,04 \\
-            Total & -                    & -   & R\$ 206,11 \\
-            \bottomrule
-        \end{tabular}
-        \caption*{Note: A quantidade dos componentes foi estimada com base no modelo 3D e pode ser ajustada durante a montagem.}
-    \end{table}
-    \vspace{-6mm}
-    \subsection{Descrição do Circuito e Ligações}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{figures/itens.png}
+    \caption{Esquema do Pêndulo Invertido Rotacional e seus Componentes.}
+    \label{fig:itens}
+\end{figure}
 
-    O circuito do sistema é composto por um microcontrolador ESP32 DevKit, responsável pelo controle do motor, leitura dos encoders e execução dos algoritmos de estabilização do pêndulo. A Figura~\ref{fig:circuito} ilustra as conexões entre os principais componentes.
+\begin{table}[H]
+    \centering
+    \caption{Lista de Peças Utilizadas na Construção do Protótipo}
+    \label{tab:lista_pecas}
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{Número} & \textbf{Peça} & \textbf{Qtd} & \textbf{Preço} \\
+        \midrule
+        1  & Topo                    & 1   & R\$ - \\
+        2  & Base                    & 1   & R\$ - \\
+        3  & Suporte                 & 4   & R\$ - \\
+        4  & Braço                   & 1   & R\$ - \\
+        5  & Encoder Incremental     & 1   & R\$ 80,34 \\
+        6  & Motor com Encoder       & 1   & R\$ 55,17 \\
+        7  & Pêndulo                 & 1   & R\$ - \\
+        8  & Parafuso M3x6           & 5   & R\$ 2,00 \\
+        9  & Parafuso M6x25          & 8   & R\$ 4,00 \\
+        10 & Ponte H                 & 1   & R\$ 31,56 \\
+        11 & ESP WROOM 32            & 1   & R\$ 33,04 \\
+        \midrule
+        \multicolumn{2}{l}{\textbf{Total}} & -- & \textbf{R\$ 206,11} \\
+        \bottomrule
+    \end{tabular}
+    \caption*{Note: A quantidade dos componentes foi estimada com base no modelo 3D e pode ser ajustada durante a montagem.}
+\end{table}
 
-    A alimentação principal é fornecida por uma fonte de \SI{12}{\volt}, que alimenta diretamente o driver de motor BTS7960 pelos terminais \texttt{B+} e \texttt{B-}. O mesmo GND da fonte é compartilhado com o GND do ESP32 para garantir a referência comum entre os sinais de controle e potência.
+\subsection{Estrutura Mecânica}
 
-    O motor DC com encoder Hall integrado é conectado ao BTS7960 pelos terminais \texttt{M+} e \texttt{M-}, responsáveis pela potência do motor, e também por quatro fios adicionais que compõem o encoder Hall:
-    \begin{itemize}
-        \item \textbf{VCC (vermelho)} – Alimentação de \SI{5}{\volt} fornecida pelo pino \texttt{VIN} do ESP32.
-        \item \textbf{GND (preto)} – Terra comum ao ESP32 e à fonte.
-        \item \textbf{Canal A} – Ligado ao pino \texttt{GPIO34} do ESP32 (entrada apenas), utilizado para leitura de pulsos do encoder.
-        \item \textbf{Canal B} – Ligado ao pino \texttt{GPIO35} do ESP32 (entrada apenas), utilizado para determinar o sentido de rotação.
-    \end{itemize}
+A estrutura mecânica do projeto, incluindo a base da planta, suportes e o braço rotacional horizontal foram totalmente fabricados utilizando
+impressão 3D. Além disso, parafusos foram utilizados para assegurar a fixação das partes mecânicas, garantindo a firmeza do sistema. 
+Para garantir o livre movimento do braço horizontal, o cabo do encoder foi fixado a estrutura do braço mecânico através de abraçadeiras plásticas,
+assim evitando enrolamento durante sua rotação. Adicionalmente, foi posicionado um grampo sargento entre a base e a superfície de apoio,
+a fim de evitar o deslocamento do sistema durante operação e garantir maior segurança durante testes.
+O pêndulo foi acoplado mecanicamente ao eixo do encoder, de maneira que não existam folgas perceptíveis, dessa forma assegurando que 
+toda a variação angular do pêndulo fosse refletida diretamente na leitura do sensor.
 
-    O pêndulo é instrumentado com um encoder incremental E38S6G5-600B-G24N, que possui saída de dois canais (A e B) em quadratura. Esses sinais são conectados aos pinos \texttt{GPIO32} e \texttt{GPIO33} do ESP32, permitindo a leitura da posição angular e do sentido de movimento.
-
-    O controle de velocidade e direção do motor é realizado via sinais PWM gerados pelo ESP32:
-    \begin{itemize}
-        \item \textbf{RPWM} – Pino \texttt{GPIO25}, responsável pelo controle de rotação em sentido horário.
-        \item \textbf{LPWM} – Pino \texttt{GPIO26}, responsável pelo controle de rotação em sentido anti-horário.
-        \item \textbf{EN-R} e \textbf{EN-L} – Pinos \texttt{GPIO27} e \texttt{GPIO14}, respectivamente, usados para habilitar os canais do driver (podendo ser fixados em nível lógico alto se não for necessário controle via software).
-    \end{itemize}
-
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.9\columnwidth]{figures/circuito.png}
-        \caption{Diagrama do circuito do pêndulo invertido rotacional com ESP32, BTS7960, motor DC com encoder Hall e encoder incremental do pêndulo.}
-        \label{fig:circuito}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{figures/estrutura_mecanica.jpeg} % Ajustado para columnwidth
+    \caption{Estrutura Mecânica}
+    \label{fig:estrutura_mecanica}
     \end{figure}
 
+\subsection{Componentes Eletrônicos e Funcionamento do Circuito}
+Os componentes eletrônicos utilizados na montagem final são listados na tabela \ref{tab:componentes}, a seguir:
+
+\begin{table}[H]
+\centering
+\caption{Componentes Eletrônicos}
+\label{tab:componentes}
+\small
+\begin{tabular}{c p{0.30\columnwidth} c p{0.42\columnwidth}}
+\toprule
+\textbf{Nº} & \textbf{Componente} & \textbf{Qtd} & \textbf{Finalidade} \\
+\midrule
+1 & ESP32 WROOM               & 1 & Lógica de controle e aquisição de dados \\
+2 & Encoder E38S6G5-600B-G24N & 1 & Leitura do ângulo do pêndulo \\
+3 & L298N (driver de motor)   & 1 & Interface de potência para o motor \\
+4 & Motor JGA25-370 6V        & 1 & Acionamento do braço/pêndulo rotacionais \\
+5 & Fonte de bancada 8.3V     & 1 & Alimentação da ponte H e do motor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Para esse projeto, foi utilizado uma placa Esp32 WROOM responsável pelo controle do motor, leitura do encoder e implementação embarcada
+do controlador PID. A placa é alimentada via porta usb por um computador, e os sensores são alimentados utilizando a saída de 5V da ESP32. 
+Foi utilizada uma fonte de bancada, fornecendo 8.3V diretamente ao driver do motor LM298 pelo terminal $V_s$ (power suply) da ponte H. 
+O GND da fonte e da placa ESP32 são compartilhados, assim garantindo a mesma referência elétrica em todo o circuito. O diagrama completo do
+circuito pode ser verificado na figura \ref{fig:circuit}. 
+
+\subsection{Conexões}
+O motor JGA25-370 com encoder hall integrado é conectado aos terminais \textbf{OUT1} e \textbf{OUT2}, responsáveis pela velocidade do motor.
+A alimentação do encoder integrado, e a leitura dos canais A e B segue a seguinte pinagem:
+
+\begin{itemize}
+    \item $\mathbf{V_{CC}}$ (Azul): Conectado a saída de 5V da ESP32.
+    \item \textbf{GND} (Preto): Conectado ao terra comum a placa e fonte.
+    \item \textbf{CANAL A} (Amarelo): Conectado ao pino GPIO34.
+    \item \textbf{CANAL B} (Verde): Conectado ao pino GPIO35. 
+\end{itemize}
+
+É importante lembrar que a leitura do encoder integrado ao motor não esta sendo utilizada, devido a natureza \textbf{SISO} (Single Input Single Output)
+desejada. Porém, a conexão facilita um futuro incremento do projeto, considerando também o ângulo do braço horizontal, dessa forma
+caracterizando um sistema \textbf{MIMO} (Multiple Input Multiple Outpu). 
+
+O encoder incremental E38S6G5-600B-G24N que possui saída em dois canais, canal A e canal B, em quadratura, o que permite a leitura
+do ângulo do pêndulo. O canal A é conectado ao pino \textbf{GPIO33} e o canal B ao pino \textbf{GPIO32}. A alimentação desse módulo é feita através
+da saída de 5V da ESP32. 
+
+O controle da velocidade e direção do motor é feita através do módulo LM298, por meio de sinal PWM e dos canais \textbf{IN1} e
+\textbf{IN2} do driver em questão. Além disso, as saídas \textbf{OUT1} e \textbf{OUT2} são ligadas aos polos negativo e positivo
+do motor, respectivamente. A ponte H é alimentada pela fonte de bancada com 8.3V na sua entrada $V_{C}$ e aterrada ao GND comum do
+circuito. Os seguintes pinos da ESP32 se conectam ao módulo:
+
+\begin{itemize}
+    \item \textbf{GPIO25} (PWM): Responsável pelo controle da velocidade do motor. 
+    \item \textbf{GPIO18} e \textbf{GPIO19}: Conectados a IN1 e IN2, respectivamente. São reponsáveis pelo controle da direção do motor. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{figures/furuta_schematic.png} % Ajustado para columnwidth
+    \caption{Diagrama do Circuito}
+    \label{fig:circuit}
+    \end{figure}
 
 \subsection{Ambiente de Software}
 
-    Para a simulação do sistema de controle do pêndulo invertido rotacional, será utilizado o ambiente de simulação \textbf{MATLAB/Simulink}. O Simulink permitirá a modelagem gráfica do sistema dinâmico e do controlador, além de possibilitar a simulação do comportamento do sistema em malha fechada. As equações diferenciais que governam o movimento do pêndulo serão implementadas no Simulink, e o controlador será testado em ambiente simulado antes de sua implementação em hardware.
+A implementação foi realizada em \textbf{C++} no microcontrolador \textbf{ESP32 WROOM}, utilizando o ambiente Arduino e \textit{FreeRTOS} para organização das tarefas (aquisição do encoder, controle e telemetria). Os dados experimentais (ângulo, velocidade, sinal de controle e termos do PID) foram transmitidos via serial e registrados em arquivo CSV.
 
-    O MATLAB será utilizado para análise dos resultados, ajustes no controlador, e validação da solução por meio de simulações numéricas. Além disso, o MATLAB/Simulink facilita a integração com o Arduino, permitindo a comunicação entre a simulação e a implementação real do sistema.
+Para \textbf{análise e visualização}, empregou-se um fluxo em \textbf{Python} com \textit{NumPy}/\textit{Pandas} para tratamento dos dados e a biblioteca \textbf{Matplotlib} para geração dos gráficos (respostas a impulso/degrau, evolução do erro, sinal de controle e espectros quando necessário). Esse pipeline permitiu comparar rapidamente diferentes sintonias e documentar os resultados de forma reprodutível.
+
+Quando conveniente, pequenas simulações de apoio (discretização do controlador e testes de filtros) também foram feitas em Python, mantendo a mesma base de gráficos do Matplotlib para consistência entre simulação e experimento.
 
 
     % \begin{itemize}
@@ -312,20 +366,13 @@
 
 %----------------------------------------------------------
 
+\section{Modelagem Matemática}
 
-\section{Introdução}
-    \taustart{A}nteriormente, foi discutido a importância do pêndulo invertido no estudo prático de sistemas de controle, as
-    diferenças entre os dois principais modelos presentes na literatura e a escolha do pêndulo invertido rotacional como
-    interesse deste estudo.
-    
-    \subsection{Descrição do Sistema}
-    Recapitulando, o pêndulo invertido rotacional, também chamado de Pêndulo de Furuta, é composto por um pêndulo acoplado
-    a um braço horizontal giratório, que é acionado por um motor. O movimento do sistema ocorre no plano horizontal, através
-    do movimento do braço giratório e no plano vertical, através do movimento do pêndulo. A relação de apenas um atuador para
-    dois graus de liberdade caracteriza este sistema como subatuado. A Figura~\ref{fig:esquema} apresenta o modelo de 
-    referência para a modelagem matemática e implementação do controlador. 
+A compreensão precisa da dinâmica do Pêndulo de Furuta exige uma formulação matemática rigorosa. Antes de prosseguir com a derivação das equações de movimento, é fundamental estabelecer a convenção de coordenadas adotada. Conforme ilustrado na Figura~\ref{fig:angulo_pendulo}, o ângulo de rotação do braço horizontal é denotado por \(\theta\). O ponto crucial para a estabilização é a definição do ângulo \(\alpha\) do pêndulo em relação à vertical: o estado de interesse, onde o pêndulo se encontra na posição invertida (verticalmente para cima), corresponde explicitamente a \(\alpha = 0\). Essa definição é vital para a interpretação dos resultados de controle e para a linearização do sistema em torno deste ponto de equilíbrio instável.
+A formulação adotada neste relatório segue de perto a apresentada em Ramos et al. \cite{ramos2011rotary}, 
+que descrevem detalhadamente o procedimento de modelagem do pêndulo invertido rotacional (Pêndulo de Furuta). 
 
-    \subsection{Variávies do Sistema}
+\subsection{Variávies do Sistema}
     O sistema físico possui o torque do motor como única entrada. Para este estudo, apenas a ângulo do pêndulo será considerado
     como saída, dessa forma caracterizando um sistema \textit{single input single output} (SISO). É importante destacar
     que é possível considerar também o ângulo do braço como saída, dessa forma caracterizando um sistema
@@ -352,23 +399,6 @@
     \end{tabular}
 \end{table}
 
-
-\begin{figure}[H]
-        \centering
-        \includegraphics[width=0.85\columnwidth]{figures/pendulo com angulos.png}
-        \caption{Representação tridimensional do pêndulo invertido rotacional com seus parâmetros físicos e coordenadas. Fonte: \cite{Duart2017}}
-        \label{fig:esquema}
-\end{figure} 
-
-\subsection{Objetivo}
-O objetivo desta etapa é a obtenção do modelo matemático que descreve a dinâmica do sistema, 
-análisar o modelo obtido e simular através do software MATLAB/Simulink.
-
-\section{Modelagem Matemática}
-
-A compreensão precisa da dinâmica do Pêndulo de Furuta exige uma formulação matemática rigorosa. Antes de prosseguir com a derivação das equações de movimento, é fundamental estabelecer a convenção de coordenadas adotada. Conforme ilustrado na Figura~\ref{fig:angulo_pendulo}, o ângulo de rotação do braço horizontal é denotado por \(\theta\). O ponto crucial para a estabilização é a definição do ângulo \(\alpha\) do pêndulo em relação à vertical: o estado de interesse, onde o pêndulo se encontra na posição invertida (verticalmente para cima), corresponde explicitamente a \(\alpha = 0\). Essa definição é vital para a interpretação dos resultados de controle e para a linearização do sistema em torno deste ponto de equilíbrio instável.
-A formulação adotada neste relatório segue de perto a apresentada em Ramos et al. \cite{ramos2011rotary}, 
-que descrevem detalhadamente o procedimento de modelagem do pêndulo invertido rotacional (Pêndulo de Furuta). 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\columnwidth]{figures/angulo_pendulo.png} % Ajustado para columnwidth
