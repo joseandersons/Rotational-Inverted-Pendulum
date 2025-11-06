@@ -4,15 +4,27 @@
 #include "encoder.h"
 #include "motor.h"
 #include "control.h"
+#include "params.h"
+#include "serial_cmd.h"
+#include "serial_tx.h"
 
 void setup(){
   Serial.begin(115200);
+  Serial.setTxBufferSize(2048);   
+
   filas_init();
+
   encoder_isr_init();
   motor_init();
   vTaskDelay(pdMS_TO_TICKS(300));
+
   encoder_task_start();
   motor_task_start();
+
+  params_begin();          
+  serial_cmd_start();      
+  serial_tx_task_start(); 
+
   control_task_start();
 }
 

@@ -26,9 +26,9 @@
 #define GEAR 1.0f
 #define TAU (2.0f*(float)PI)
 
-#define KP 282.0f
-#define KI 0.0f
-#define KD 0.0f
+#define KP_DEFAULT 40.0f
+#define KI_DEFAULT 0.0f
+#define KD_DEFAULT 0.2f
 
 #define U_SAT 60.0f
 #define I_BAND_DEG 8.0f

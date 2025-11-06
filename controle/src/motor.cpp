@@ -16,7 +16,7 @@ static void motor_write_signed(int16_t dutySigned, bool kick) {
   ledcWrite(PWM_CH, mag);
 }
 
-static void motor_task(void*) {
+static void motor_task(void*) {180
   MotorCmd cmd{};
   for (;;) {
     if (xQueueReceive(qMotor, &cmd, pdMS_TO_TICKS(WATCHDOG_MS)) == pdTRUE) {
