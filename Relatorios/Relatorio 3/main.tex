@@ -858,7 +858,7 @@ A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe
 \begin{itemize}
     \item \textbf{Resposta ao Impulso} Foi obtida ao fornecer uma pequena pertubação.
     \item \textbf{Resposta ao Degrau} Foi obtida ao fornecer uma pertubação de maneira constante.
-    \item \textbf{Resposta à Rampa} Foi obtida ao fornecer uma pertubação crescente.
+    \item \textbf{Resposta à Rampa} Foi obtida ao fornecer uma pertubação cresc.
 
 Com base nessa análise, podemos classificar cada imagem.
 
@@ -874,6 +874,12 @@ Com base nessa análise, podemos classificar cada imagem.
     \label{fig:impulso}
 \end{figure}
 
+\paragraph{Observações:}
+
+\begin{itemize}
+    \item \textbfJustificativa: Em $t \approx 115$s, a resposta $\theta$ cresce de forma abrupta, quase vertical. A "quina" na partida, em vez de uma curva suave, é característica de uma resposta inicial $y(t) \propto t$.
+    \item \textbfComportamento:} O impulso (uma "pancada") transfere energia instantaneamente ao sistema, que, por ser instável, começa a girar imediatamente. A velocidade de rotação cresce exponencialmente, resultando nas "oscilações" (rotações) muito rápidas vistas no gráfico.
+\end{itemize}
 
 % -----------------------------------------------------
 \subsection{Figura 2: Resposta ao Degrau}
@@ -888,7 +894,7 @@ Com base nessa análise, podemos classificar cada imagem.
 \end{figure}
 
 \paragraph{Observações:}
-Esta imagem (arquivo: \texttt{degrau\_malha\_aberta.jpg}) corresponde à \textbf{resposta ao degrau}.
+
 \begin{itemize}
     \item \textbfJustificativa: Em $t \approx 268$s, a curva $\theta$ inicia seu crescimento de forma suave, com uma tangente horizontal. Este comportamento $y(t) \propto t^2$ é o esperado para uma resposta ao degrau.
     \item \textbfComportamento:} A aplicação de uma entrada constante (degrau) faz com que o ângulo do pêndulo comece a divergir. A taxa de divergência (velocidade angular) aumenta exponencialmente, levando o pêndulo a girar cada vez mais rápido.
@@ -907,7 +913,7 @@ Esta imagem (arquivo: \texttt{degrau\_malha\_aberta.jpg}) corresponde à \textbf
 \end{figure}
 
 \paragraph{Observações:}
-Esta imagem (arquivo: \texttt{rampa\_malha\_aberta.jpg}) corresponde à \textbf{resposta à rampa}.
+
 \begin{itemize}
     \item \textbfJustificativa: Em $t \approx 356$s, a resposta $\theta$ também começa suavemente, mas visualmente "descola" do eixo zero de forma mais lenta que a resposta ao degrau. Este comportamento $y(t) \propto t^3$ é característico da resposta à rampa.
     \item \textbfComportamento:} A entrada em rampa (que cresce linearmente) também desestabiliza o sistema. A resposta angular $\theta$ cresce exponencialmente (dominada pela instabilidade do sistema), levando novamente o pêndulo a girar em velocidade crescente.
