@@ -292,6 +292,13 @@ a fim de evitar o deslocamento do sistema durante operação e garantir maior se
 O pêndulo foi acoplado mecanicamente ao eixo do encoder, de maneira que não existam folgas perceptíveis, dessa forma assegurando que 
 toda a variação angular do pêndulo fosse refletida diretamente na leitura do sensor.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{figures/estrutura_mecanica.jpeg} % Ajustado para columnwidth
+    \caption{Estrutura Mecânica}
+    \label{fig:estrutura_mecanica}
+    \end{figure}
+
 \subsection{Componentes Eletrônicos e Funcionamento do Circuito}
 Os componentes eletrônicos utilizados na montagem final são listados na tabela \ref{tab:componentes}, a seguir:
 
@@ -317,17 +324,17 @@ Fonte de bancada 8.3V & 1 & Alimentação da ponte H e do motor \\
 \end{table}
 
 Para esse projeto, foi utilizado uma placa Esp32 WROOM responsável pelo controle do motor, leitura do encoder e implementação embarcada
-do controlador PID. A placa é alimentada via porta usb por um computador, e os sensores são alimentados utilizando a saída de 3.3V da ESP32. 
+do controlador PID. A placa é alimentada via porta usb por um computador, e os sensores são alimentados utilizando a saída de 5V da ESP32. 
 Foi utilizada uma fonte de bancada, fornecendo 8.3V diretamente ao driver do motor LM298 pelo terminal $V_s$ (power suply) da ponte H. 
 O GND da fonte e da placa ESP32 são compartilhados, assim garantindo a mesma referência elétrica em todo o circuito. O diagrama completo do
-circuito pode ser verificado na imagem. 
+circuito pode ser verificado na figura \ref{fig:circuit}. 
 
 \subsection{Conexões}
 O motor JGA25-370 com encoder hall integrado é conectado aos terminais \textbf{OUT1} e \textbf{OUT2}, responsáveis pela velocidade do motor.
 A alimentação do encoder integrado, e a leitura dos canais A e B segue a seguinte pinagem:
 
 \begin{itemize}
-    \item $\mathbf{V_{CC}}$ (Azul): Conectado a saída de 3.3V da ESP32.
+    \item $\mathbf{V_{CC}}$ (Azul): Conectado a saída de 5V da ESP32.
     \item \textbf{GND} (Preto): Conectado ao terra comum a placa e fonte.
     \item \textbf{CANAL A} (Amarelo): Conectado ao pino GPIO34.
     \item \textbf{CANAL B} (Verde): Conectado ao pino GPIO35. 
@@ -338,8 +345,8 @@ desejada. Porém, a conexão facilita um futuro incremento do projeto, considera
 caracterizando um sistema \textbf{MIMO} (Multiple Input Multiple Outpu). 
 
 O encoder incremental E38S6G5-600B-G24N que possui saída em dois canais, canal A e canal B, em quadratura, o que permite a leitura
-do ângulo do pêndulo. O canal A é conectado ao pino \textbf{GPIO33} e o canal B ao pino \textbf{GIPIO32}. A alimentação desse módulo é feita através
-da saída de 3.3V da ESP32. 
+do ângulo do pêndulo. O canal A é conectado ao pino \textbf{GPIO33} e o canal B ao pino \textbf{GPIO32}. A alimentação desse módulo é feita através
+da saída de 5V da ESP32. 
 
 O controle da velocidade e direção do motor é feita através do módulo LM298, por meio de sinal PWM e dos canais \textbf{IN1} e
 \textbf{IN2} do driver em questão. Além disso, as saídas \textbf{OUT1} e \textbf{OUT2} são ligadas aos polos negativo e positivo
@@ -347,9 +354,16 @@ do motor, respectivamente. A ponte H é alimentada pela fonte de bancada com 8.3
 circuito. Os seguintes pinos da ESP32 se conectam ao módulo:
 
 \begin{itemize}
-    \item \textbf{GPTIO25} (PWM): Responsável pelo controle da velocidade do motor. 
+    \item \textbf{GPIO25} (PWM): Responsável pelo controle da velocidade do motor. 
     \item \textbf{GPIO18} e \textbf{GPIO19}: Conectados a IN1 e IN2, respectivamente. São reponsáveis pelo controle da direção do motor. 
 \end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\columnwidth]{figures/furuta_schematic.pdf} % Ajustado para columnwidth
+    \caption{Diagrama do Circuito}
+    \label{fig:circuit}
+    \end{figure}
 
 
 \printbibliography
