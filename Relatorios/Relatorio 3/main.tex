@@ -1,0 +1,1001 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+% Tau
+% LaTeX Template
+% Version 2.4.4 (28/02/2025)
+%
+% Author: 
+% Guillermo Jimenez (memo.notess1@gmail.com)
+% 
+% License:
+% Creative Commons CC BY 4.0
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[9pt,a4paper,twocolumn,twoside]{tau-class/tau}
+\usepackage[brazil]{babel}
+
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+%% Spanish babel recomendation
+% \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel} 
+
+%% Draft watermark
+% \usepackage{draftwatermark}
+
+%----------------------------------------------------------
+% TITLE
+%----------------------------------------------------------
+
+%\journalname{Relatório de Sistemas de Controle I - Etapa 1}
+%\title{Controle de Estabilização de um Pêndulo Invertido Rotacional}
+
+%----------------------------------------------------------
+% AUTHORS, AFFILIATIONS AND PROFESSOR
+%----------------------------------------------------------
+
+\author[a,1]{JOSÉ A. DA SILVA}
+\author[b,2]{KAUA LESSA L. DOS SANTOS }
+\author[c,3]{PABLO MUNIH S. DE CARVALHO}
+\author[d,4]{PLÁCIDO AUGUSTUS DE O. CORDEIRO}
+
+%----------------------------------------------------------
+
+\affil[a]{Engenharia da Computação, Universidade Federal de Alagoas}
+\affil[b]{Engenharia da Computação, Universidade Federal de Alagoas}
+\affil[c]{Engenharia da Computação, Universidade Federal de Alagoas}
+
+\professor{Prof. ICARO BEZERRA QUEIROZ DE ARAUJO}
+
+%----------------------------------------------------------
+% FOOTER INFORMATION
+%----------------------------------------------------------
+
+\institution{Universidade Federal de Alagoas}
+%\footinfo{\LaTeX\ Template}%
+\theday{\today}
+% \leadauthor{Aluno et al.} %
+\course{Engenharia da Computação}
+
+%----------------------------------------------------------
+% ABSTRACT AND KEYWORDS
+%----------------------------------------------------------
+
+\begin{abstract}    
+    Este relatório trata da segunda etapa do projeto da disciplina de Sistemas de Controle I,
+    de um pêndulo invertido rotacional. É apresentado, em primeira instância, as equações diferenciais
+    de movimento do pêndulo obtidas através do método Euler-Lagrange \cite{ramos2011rotary}, 
+    linearização do modelo e obtenção da função de transferência. Em seguida, a estabilidade do sistema é analisada, 
+    assim como a resposta do modelo a diferentes entradas, a fim de prever seu comportamento. 
+    Por fim, o software MATLAB/Simulink é utilizado para simular o sistema em malha aberta e os resultados são discutidos. 
+\end{abstract}
+
+
+%----------------------------------------------------------
+
+\keywords{pêndulo invertido, controle rotacional, estabilização, sistemas não lineares}
+
+%----------------------------------------------------------
+
+\begin{document}
+		
+    \maketitle 
+    \thispagestyle{firststyle} 
+    \tauabstract 
+    % \tableofcontents
+    % \linenumbers 
+    
+%----------------------------------------------------------
+
+\section{Introdução}
+    \taustart{O} pêndulo invertido é um sistema clássico utilizado como plataforma de testes no estudo de controle de sistemas dinâmicos instáveis. 
+    Seu comportamento não linear e naturalmente instável o torna ideal para o desenvolvimento e avaliação de diferentes estratégias de controle. 
+    Esse tipo de sistema está presente em aplicações reais como segways, foguetes e robôs bípedes autobalanceados.
+
+    \subsection{Importância}
+
+    De acordo com \cite{casas2024}, os modelos de pêndulos são úteis tanto por razões pedagógicas e de pesquisa, como por
+    representarem versões simplificadas de sistemas mecânicos que surgem na robótica e sistemas espaciais. Já \cite{breganon2021}
+    destaca modelos de pêndulos, como o aeropêndulo e o Pêndulo de Furuta, como ferramentas importantes para o ensino de conteúdos
+    relacionados ao controle de sistemas. 
+
+    \subsection{Arquiteturas}
+
+    Na literatura, é possível encontrar duas arquiteturas principais de pêndulos invertidos:
+    A linear (Figura~\ref{fig:pendulos}a), considerada a forma mais comum de pêndulo invertido, tem o pêndulo montado sobre uma base com um carrinho
+    que pode se movimentar livremente sobre um plano horizontal \cite{diao2016}; E o modelo rotacional (Figura~\ref{fig:pendulos}b), também conhecido
+    como Pêndulo de Furuta, onde o pêndulo está conectado a um braço giratório acionado por um motor. Este último representa 
+    um sistema subatuado e com maior complexidade dinâmica, sendo mais desafiador do ponto de vista de controle.
+
+    \begin{figure}[H]
+    \centering
+    \caption{(a) Pêndulo Invertido Linear. (b) Pêndulo Invertido Rotacional.}
+    \includegraphics[width=0.8\columnwidth]{figures/pendulos.png} 
+    \label{fig:pendulos}
+    \caption*{Fonte: \cite{Ogata2010} e \cite{Nath2014}.}
+\end{figure}
+
+    O Pêndulo de Furuta foi proposto por Katsuhita Furuta em 1992 no Instituto de Tecnologia de Tóquio \cite{houck2013},
+    e tem sido amplamente utilizado em contextos acadêmicos e experimentais. Devido às suas características, o modelo 
+    rotacional foi o escolhido neste projeto.
+
+    \subsection{Objetivo}
+
+    Este relatório apresenta a primeira etapa do desenvolvimento de um sistema de controle para estabilização do pêndulo rotacional.
+    Os objetivos incluem a descrição conceitual do sistema, definição das variáveis envolvidas, revisão de abordagens de controle
+    aplicadas e levantamento dos materiais e métodos necessários para a implementação prática e simulação do protótipo.
+
+\section{Descrição do Sistema}
+
+    O sistema proposto consiste em um \textbf{pêndulo invertido rotacional}, também conhecido como Pêndulo de Furuta. Trata-se de uma estrutura clássica na área de controle de sistemas dinâmicos, composta por uma barra vertical (pêndulo) acoplada a um braço horizontal giratório, que é acionado por um motor DC. A base do sistema permanece fixa, e o movimento ocorre simultaneamente em dois planos: o braço gira no plano horizontal, enquanto o pêndulo oscila no plano vertical.
+
+    Esse tipo de pêndulo é especialmente interessante do ponto de vista didático e experimental, pois combina características desafiadoras como a instabilidade natural e a subatuação — ou seja, o número de entradas de controle (um único motor) é inferior ao número de variáveis dinâmicas relevantes (dois ângulos). Isso impõe restrições significativas ao projeto do controlador, que deve ser capaz de estabilizar o sistema mesmo com essa limitação.
+
+    \subsection{Funcionamento do Sistema}
+    
+    O motor aplica um torque $\tau$ na base giratória, fazendo com que o braço horizontal, com inércia $I_0$, rotacione ao redor do eixo vertical. Essa rotação transfere momento ao pêndulo, gerando uma interação dinâmica entre os dois corpos. A gravidade atua diretamente sobre o pêndulo vertical, fazendo com que ele tenda naturalmente a cair. O objetivo do sistema de controle é calcular e aplicar um torque adequado no braço giratório para gerar forças inerciais que mantenham o pêndulo em pé, na posição vertical invertida.
+
+    A interação entre os dois graus de liberdade ($\theta_0$ e $\theta_1$) cria um sistema acoplado e não linear. A ausência de controle direto sobre o pêndulo (pois o motor atua apenas sobre o braço) impõe desafios adicionais, exigindo que o controlador manipule o braço de forma inteligente para influenciar o movimento do pêndulo de maneira indireta, especialmente durante oscilações rápidas ou diante de perturbações externas.
+
+    \subsection{Variáveis do Sistema}
+    
+    O sistema possui uma única entrada e duas saídas principais:
+    
+    \begin{itemize}
+        \item \textbf{Variável de entrada (atuador):} torque $\tau$ aplicado pelo motor na base.
+        \item \textbf{Variáveis de saída (controladas):}
+        \begin{itemize}
+        \item $\theta_0$: ângulo de rotação da base (braço horizontal), medido pelo \textit{encoder acoplado ao motor}. Representa o movimento de rotação no plano horizontal.
+        \item $\theta_1$: ângulo do pêndulo em relação à vertical, medido pelo \textit{encoder incremental} localizado no eixo de articulação entre o pêndulo e o braço horizontal. Essa é a principal variável a ser estabilizada pelo controle, idealmente mantendo-se próxima de zero (posição vertical invertida).
+        \end{itemize}
+    \end{itemize}
+
+    Além dessas variáveis, outros parâmetros físicos são essenciais para a modelagem e controle do sistema, como as massas dos componentes ($m_0$, $m_1$), os comprimentos dos braços ($L_0$, $L_1$), os momentos de inércia ($I_0$, $I_1$) e a constante gravitacional $g$.
+
+    o ponto de vista de modelagem em espaço de estados, o sistema é classificado como um sistema dinâmico não linear de quarta ordem, pois seu comportamento é descrito por quatro variáveis de estado:
+    \begin{itemize}
+    
+    \item $\theta_0$ e sua derivada temporal $\omega_0$ (velocidade angular do braço)
+
+    \item $\theta_1$ e sua derivada temporal $\omega_1$ (velocidade angular do pêndulo).
+    
+    \end{itemize}
+    Essas quatro variáveis constituem o vetor de estado e são suficientes para representar completamente a evolução dinâmica do sistema ao longo do tempo.
+
+    \subsection{Esquema do Sistema}
+    
+    A Figura~\ref{fig:esquema} apresenta uma representação tridimensional do sistema, destacando os principais parâmetros físicos e as coordenadas angulares relevantes. Esse modelo será utilizado como referência para a modelagem matemática e implementação do controlador nas etapas seguintes do projeto.
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\columnwidth]{figures/pendulo com angulos.png}
+        \caption{Representação tridimensional do pêndulo invertido rotacional com seus parâmetros físicos e coordenadas. Fonte: \cite{Duart2017}}
+        \label{fig:esquema}
+    \end{figure}
+   
+
+\section{Revisão Bibliográfica}
+
+   O controle de um pêndulo rotacional invertido normalmente é dividido em duas etapas: swing-up (balanço inicial), que leva o pêndulo da posição para baixo até próximo da posição invertida, e estabilização, que mantém o pêndulo equilibrado no ponto de equilíbrio.
+
+    Diversas estratégias podem ser utilizadas na fase de estabilização. Estudos como os de \cite{mathew2013} mostram que controladores PID bem sintonizados podem apresentar desempenho satisfatório em torno do ponto de equilíbrio, sendo uma boa escolha para projetos introdutórios. Outras técnicas mais avançadas incluem o controle por linearização por realimentação, detalhado na obra de \cite{spong2008}, o controle robusto não linear, exemplificado por \cite{Furuta1992}, e o controle preditivo baseado em modelo (MPC), como abordado por \cite{deepak2019l}, mas estas exigem maior conhecimento em controle.
+
+        Além dessas variáveis, outros parâmetros físicos são essenciais para a modelagem e controle do sistema, como as massas dos componentes ($m_0$, $m_1$), os comprimentos dos braços ($L_0$, $L_1$), os momentos de inércia ($I_0$, $I_1$) e a constante gravitacional $g$.
+
+    Neste trabalho, adotaremos como principal referência o documento elaborado por \cite{yamane2021} intitulado “Projeto Mecânico e Síntese do Controlador de um Pêndulo de Furuta”. Essa obra propõe diretamente a modelagem do pêndulo invertido rotacional
+
+    O autor apresenta uma modelagem detalhada baseada em:
+    \begin{itemize}
+
+    \item Cálculo da energia cinética e potencial do sistema
+    
+    \item Aplicação das equações de Euler-Lagrange  
+    
+    \item Obtenção das equações de movimento para os subsistemas mecânico e eletromecânico
+    
+    
+    \item Construção de um modelo não linear acoplado no ambiente 
+    MATLAB Simulink
+    \end{itemize}
+
+    Além disso, o trabalho realiza a síntese e simulação de um controlador LQR, validando os resultados por meio de experimentos com um protótipo real.
+    
+    Adicionalmente, será utilizada como referência complementar prática a obra “Modular Control of a Rotary Inverted Pendulum System” \cite{diao2016}, que apresenta uma abordagem didática e direta para implementação prática do controle de um pêndulo rotacional. Essa obra fornece os modelos dinâmicos (linear e não linear), parâmetros físicos e estratégias de controle PID e swing-up modulares, sendo ideal para aplicação em ambiente real e simulações no MATLAB/Simulink. Sua linguagem clara e foco na execução o fizeram um bom candidato para esse projeto.
+
+
+\section{Materiais e Métodos Propostos}
+
+    Para a implementação do sistema, serão utilizados os seguintes componentes, organizados em categorias de componentes eletrônicos e mecânicos.
+
+    \subsection{Componentes Eletrônicos}
+    \begin{itemize}
+        \item \textbf{Microcontrolador:} Esp32 \cite{esp32Datasheet}, utilizado para controle do sistema de balanceamento e leitura dos sensores.
+        \item \textbf{Motor com Encoder:} JGA25-371 12V DC 18-1930RPM \cite{mot4datasheet}, motor DC com encoder incremental para acionar o pêndulo e medir o ângulo.
+        \item \textbf{Driver de Motor (Ponte H):} BTS7960 \cite{bts7960datasheet}, utilizado para controlar a direção e a velocidade do motor.
+        \item \textbf{Encoder Incremental:} E38S6G5-600B-G24N \cite{e38s6g5datasheet}, para medir a posição do pêndulo e enviar os dados de feedback para o microcontrolador.
+        \item \textbf{Fonte de Alimentação:} Fonte de 12V para alimentar os motores, encoder e o microcontrolador.
+    \end{itemize}
+
+    \subsection{Componentes Mecânicos}
+    \begin{itemize}
+        \item \textbf{Estrutura impressa em 3D:} A estrutura do protótipo será totalmente impressa em 3D, incluindo a base e os suportes necessários para o sistema de pêndulo.
+        \item \textbf{Parafusos:} Para fixação das partes mecânicas, serão usados parafusos, assegurando que os componentes fiquem firmemente montados.
+    \end{itemize}
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\columnwidth]{figures/itens.png}
+        \caption{Esquema do Pêndulo Invertido Rotacional e seus Componentes.}
+        \label{fig:itens}
+    \end{figure}
+    
+    \begin{table}[H]
+        \centering
+        \caption{Lista de Peças Utilizadas na Construção do Protótipo}
+        \label{tab:lista_pecas}
+        \begin{tabular}{lllll}
+            \toprule
+            \textbf{Número} & \textbf{Peça} & \textbf{Qtd}  & \textbf{Preço} \\
+            \midrule
+            1  & Topo                    & 1   & R\$ - \\
+            2  & Base                    & 1   & R\$ - \\
+            3  & Suporte                 & 4   & R\$ - \\
+            4  & Braço                   & 1   & R\$ - \\
+            5  & Encoder Incremental     & 1   & R\$ 80,34 \\
+            6  & Motor com Encoder       & 1   & R\$ 55,17 \\
+            7  & Pêndulo                 & 1   & R\$ - \\
+            8  & Parafuso M3x6           & 5   & R\$ 2,00 \\
+            9  & Parafuso M6x25          & 8   & R\$ 4,00 \\
+            10 & Ponte H                 & 1   & R\$ 31,56 \\
+            11 & Esp Wroom 32            & 1   & R\$ 33,04 \\
+            Total & -                    & -   & R\$ 206,11 \\
+            \bottomrule
+        \end{tabular}
+        \caption*{Note: A quantidade dos componentes foi estimada com base no modelo 3D e pode ser ajustada durante a montagem.}
+    \end{table}
+    \vspace{-6mm}
+    \subsection{Descrição do Circuito e Ligações}
+
+    O circuito do sistema é composto por um microcontrolador ESP32 DevKit, responsável pelo controle do motor, leitura dos encoders e execução dos algoritmos de estabilização do pêndulo. A Figura~\ref{fig:circuito} ilustra as conexões entre os principais componentes.
+
+    A alimentação principal é fornecida por uma fonte de \SI{12}{\volt}, que alimenta diretamente o driver de motor BTS7960 pelos terminais \texttt{B+} e \texttt{B-}. O mesmo GND da fonte é compartilhado com o GND do ESP32 para garantir a referência comum entre os sinais de controle e potência.
+
+    O motor DC com encoder Hall integrado é conectado ao BTS7960 pelos terminais \texttt{M+} e \texttt{M-}, responsáveis pela potência do motor, e também por quatro fios adicionais que compõem o encoder Hall:
+    \begin{itemize}
+        \item \textbf{VCC (vermelho)} – Alimentação de \SI{5}{\volt} fornecida pelo pino \texttt{VIN} do ESP32.
+        \item \textbf{GND (preto)} – Terra comum ao ESP32 e à fonte.
+        \item \textbf{Canal A} – Ligado ao pino \texttt{GPIO34} do ESP32 (entrada apenas), utilizado para leitura de pulsos do encoder.
+        \item \textbf{Canal B} – Ligado ao pino \texttt{GPIO35} do ESP32 (entrada apenas), utilizado para determinar o sentido de rotação.
+    \end{itemize}
+
+    O pêndulo é instrumentado com um encoder incremental E38S6G5-600B-G24N, que possui saída de dois canais (A e B) em quadratura. Esses sinais são conectados aos pinos \texttt{GPIO32} e \texttt{GPIO33} do ESP32, permitindo a leitura da posição angular e do sentido de movimento.
+
+    O controle de velocidade e direção do motor é realizado via sinais PWM gerados pelo ESP32:
+    \begin{itemize}
+        \item \textbf{RPWM} – Pino \texttt{GPIO25}, responsável pelo controle de rotação em sentido horário.
+        \item \textbf{LPWM} – Pino \texttt{GPIO26}, responsável pelo controle de rotação em sentido anti-horário.
+        \item \textbf{EN-R} e \textbf{EN-L} – Pinos \texttt{GPIO27} e \texttt{GPIO14}, respectivamente, usados para habilitar os canais do driver (podendo ser fixados em nível lógico alto se não for necessário controle via software).
+    \end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\columnwidth]{figures/circuito.png}
+        \caption{Diagrama do circuito do pêndulo invertido rotacional com ESP32, BTS7960, motor DC com encoder Hall e encoder incremental do pêndulo.}
+        \label{fig:circuito}
+    \end{figure}
+
+
+\subsection{Ambiente de Software}
+
+    Para a simulação do sistema de controle do pêndulo invertido rotacional, será utilizado o ambiente de simulação \textbf{MATLAB/Simulink}. O Simulink permitirá a modelagem gráfica do sistema dinâmico e do controlador, além de possibilitar a simulação do comportamento do sistema em malha fechada. As equações diferenciais que governam o movimento do pêndulo serão implementadas no Simulink, e o controlador será testado em ambiente simulado antes de sua implementação em hardware.
+
+    O MATLAB será utilizado para análise dos resultados, ajustes no controlador, e validação da solução por meio de simulações numéricas. Além disso, o MATLAB/Simulink facilita a integração com o Arduino, permitindo a comunicação entre a simulação e a implementação real do sistema.
+
+
+    % \begin{itemize}
+    %     \item BREGANON, R. et al. Desenvolvimento de sistemas de pêndulos invertidos como ferramentas didáticas em cursos de engenharia de controle e automação. \textit{HOLOS}, v. 7, p. 1–14, 2021. DOI: 10.15628/holos.2021.10351.
+    
+    %     \item DUART, J. L. et al. Dynamic modeling and simulation of a rotational inverted pendulum. \textit{Journal of Physics: Conference Series}, v. 792, 2017.
+    
+    %     \item CASAS, V. M. et al. Construção e projeto de controle de um protótipo de pêndulo invertido rotacional. \textit{EasyChair Preprint}, 2024.
+    
+    %     \item JAKOBSSON, S. Á. Control of a rotary inverted pendulum system using computer vision. Master’s Thesis – Reykjavik University, 2024.
+    
+    %     \item YAMANE, L. de S. Projeto mecânico e síntese do controlador de um pêndulo de Furuta. Trabalho de Conclusão de Curso (Engenharia Mecânica) – Universidade Federal do Amazonas, 2020.
+    % \end{itemize}
+
+
+%----------------------------------------------------------
+
+
+\section{Introdução}
+    \taustart{A}nteriormente, foi discutido a importância do pêndulo invertido no estudo prático de sistemas de controle, as
+    diferenças entre os dois principais modelos presentes na literatura e a escolha do pêndulo invertido rotacional como
+    interesse deste estudo.
+    
+    \subsection{Descrição do Sistema}
+    Recapitulando, o pêndulo invertido rotacional, também chamado de Pêndulo de Furuta, é composto por um pêndulo acoplado
+    a um braço horizontal giratório, que é acionado por um motor. O movimento do sistema ocorre no plano horizontal, através
+    do movimento do braço giratório e no plano vertical, através do movimento do pêndulo. A relação de apenas um atuador para
+    dois graus de liberdade caracteriza este sistema como subatuado. A Figura~\ref{fig:esquema} apresenta o modelo de 
+    referência para a modelagem matemática e implementação do controlador. 
+
+    \subsection{Variávies do Sistema}
+    O sistema físico possui o torque do motor como única entrada. Para este estudo, apenas a ângulo do pêndulo será considerado
+    como saída, dessa forma caracterizando um sistema \textit{single input single output} (SISO). É importante destacar
+    que é possível considerar também o ângulo do braço como saída, dessa forma caracterizando um sistema
+    \textit{single input multiple output} (SIMO), porém, esse não é o foco deste estudo. As variáveis físicas são
+    apresentadas na tabela a seguir:
+
+    \begin{table}[H]
+    \centering
+    \caption{Símbolos para descrever os parâmetros das equações}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Símbolo} & \textbf{Descrição} \\
+        \midrule
+        $L$   & Distância até o centro de massa do pêndulo \\
+        $m$   & Massa do braço do pêndulo \\
+        $r$   & Comprimento do braço rotativo \\
+        $\theta$ & Ângulo do braço do pêndulo (rad) \\
+        $\alpha$ & Ângulo do pêndulo (rad) \\
+        $h$   & Distância do centro de massa do pêndulo até o solo \\
+        $J_{cm}$ & Inércia do pêndulo em relação ao seu centro de massa \\
+        $V_{x}$  & Velocidade do centro de massa do pêndulo na direção $x$ \\
+        $V_{y}$  & Velocidade do centro de massa do pêndulo na direção $y$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\columnwidth]{figures/pendulo com angulos.png}
+        \caption{Representação tridimensional do pêndulo invertido rotacional com seus parâmetros físicos e coordenadas. Fonte: \cite{Duart2017}}
+        \label{fig:esquema}
+\end{figure} 
+
+\subsection{Objetivo}
+O objetivo desta etapa é a obtenção do modelo matemático que descreve a dinâmica do sistema, 
+análisar o modelo obtido e simular através do software MATLAB/Simulink.
+
+\section{Modelagem Matemática}
+
+A compreensão precisa da dinâmica do Pêndulo de Furuta exige uma formulação matemática rigorosa. Antes de prosseguir com a derivação das equações de movimento, é fundamental estabelecer a convenção de coordenadas adotada. Conforme ilustrado na Figura~\ref{fig:angulo_pendulo}, o ângulo de rotação do braço horizontal é denotado por \(\theta\). O ponto crucial para a estabilização é a definição do ângulo \(\alpha\) do pêndulo em relação à vertical: o estado de interesse, onde o pêndulo se encontra na posição invertida (verticalmente para cima), corresponde explicitamente a \(\alpha = 0\). Essa definição é vital para a interpretação dos resultados de controle e para a linearização do sistema em torno deste ponto de equilíbrio instável.
+A formulação adotada neste relatório segue de perto a apresentada em Ramos et al. \cite{ramos2011rotary}, 
+que descrevem detalhadamente o procedimento de modelagem do pêndulo invertido rotacional (Pêndulo de Furuta). 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{figures/angulo_pendulo.png} % Ajustado para columnwidth
+    \caption{Definição das variáveis angulares do Pêndulo de Furuta, com o ângulo do braço \(\theta\) e o ângulo do pêndulo \(\alpha\). A posição de equilíbrio instável (\(\alpha=0\)) é indicada.}
+    \label{fig:angulo_pendulo}
+\end{figure}
+
+A modelagem matemática do pêndulo invertido rotacional é obtida aplicando o 
+método de Euler-Lagrange. Inicialmente, consideram-se as velocidades do 
+centro de massa do pêndulo e do braço rotativo:
+
+\begin{equation}
+    V_{Pen.\,cm} = -L \cos (\alpha) \, \dot{\alpha} \, \hat{x} - L \sin (\alpha) \, \dot{\alpha} \, \hat{y}
+\end{equation}
+
+\begin{equation}
+    V_{arm} = r \dot{\theta}
+\end{equation}
+
+Assim, as componentes de velocidade do centro de massa do pêndulo podem ser escritas como:
+\begin{align}
+    V_x &= r\dot{\theta} - L\cos(\alpha) \, \dot{\alpha} \\
+    V_y &= -L\sin(\alpha) \, \dot{\alpha}
+\end{align}
+
+\subsection{Energia Potencial}
+A única energia potencial no sistema é a gravitacional:
+\begin{equation}
+    V = m g h = m g L \cos(\alpha)
+\end{equation}
+
+\subsection{Energia Cinética}
+As energias cinéticas são devidas ao movimento do braço, ao movimento do centro 
+de massa do pêndulo e à rotação do pêndulo em torno do seu próprio centro de massa:
+
+\begin{equation}
+    T = KE_{hub} + KE_{V_x} + KE_{V_y} + KE_{pendulo}
+\end{equation}
+
+\subsubsection*{Momento de Inércia}
+O momento de inércia de uma barra homogênea em torno do centro de massa é:
+\begin{equation}
+    J_{cm} = \frac{1}{12} M R^2
+\end{equation}
+Como o comprimento do pêndulo é $2L$, temos:
+\begin{equation}
+    J_{cm} = \frac{1}{12} M (2L)^2 = \frac{1}{3} M L^2
+\end{equation}
+
+\subsubsection*{Energia Cinética do Braço (Hub)}
+\begin{equation}
+    T_{hub} = \tfrac{1}{2} J_{eq} \dot{\theta}^2
+\end{equation}
+
+\subsubsection*{Energia Cinética de Translação do Pêndulo}
+\begin{equation}
+    T_{trans} = \tfrac{1}{2} m (V_x^2 + V_y^2)
+\end{equation}
+Substituindo as velocidades:
+\begin{equation}
+    T_{trans} = \tfrac{1}{2} m \Big[ (r \dot{\theta} - L \cos(\alpha) \, \dot{\alpha})^2 + (-L \sin(\alpha) \, \dot{\alpha})^2 \Big]
+\end{equation}
+
+\subsubsection*{Energia Cinética de Rotação do Pêndulo em torno do CM}
+\begin{equation}
+    T_{rot} = \tfrac{1}{2} J_{cm} \dot{\alpha}^2
+\end{equation}
+
+\subsubsection*{Energia Cinética Total}
+
+Somando todas as parcelas de energia cinética, temos:
+\begin{equation}
+    T = \tfrac{1}{2} J_{eq} \dot{\theta}^2 
+        + \tfrac{1}{2} m (r \dot{\theta} - L \cos(\alpha) \dot{\alpha})^2
+        + \tfrac{1}{2} m (-L \sin(\alpha) \dot{\alpha})^2
+        + \tfrac{1}{2} J_{cm} \dot{\alpha}^2
+    \label{eq:Ttotal1}
+\end{equation}
+
+Expandindo os quadrados:
+\begin{align}
+    T &= \tfrac{1}{2} J_{eq} \dot{\theta}^2 
+        + \tfrac{1}{2} m \big(r^2 \dot{\theta}^2 - 2 r L \cos(\alpha) \, \dot{\theta}\dot{\alpha} + L^2 \cos^2(\alpha) \, \dot{\alpha}^2 \big) \nonumber \\
+      &\quad + \tfrac{1}{2} m \big(L^2 \sin^2(\alpha) \, \dot{\alpha}^2\big)
+        + \tfrac{1}{2} \Big(\tfrac{1}{3} m L^2\Big) \dot{\alpha}^2
+    \label{eq:Ttotal2}
+\end{align}
+
+Reagrupando os termos:
+\begin{align}
+    T &= \tfrac{1}{2}(J_{eq} + m r^2) \dot{\theta}^2 
+        - m L r \cos(\alpha) \, \dot{\theta}\dot{\alpha} \nonumber \\
+      &\quad + \tfrac{1}{2} m L^2 (\cos^2(\alpha) + \sin^2(\alpha))\dot{\alpha}^2
+        + \tfrac{1}{6} m L^2 \dot{\alpha}^2
+    \label{eq:Ttotal3}
+\end{align}
+
+Como $\cos^2(\alpha) + \sin^2(\alpha) = 1$, temos:
+\begin{equation}
+    T = \tfrac{1}{2}(J_{eq} + m r^2) \dot{\theta}^2 
+        - m L r \cos(\alpha) \, \dot{\theta}\dot{\alpha} 
+        + \tfrac{2}{3} m L^2 \dot{\alpha}^2
+    \label{eq:TtotalFinal}
+\end{equation}
+
+
+\subsection{Lagrangiana}
+
+A energia potencial e a energia cinética total foram obtidas como:
+\begin{align}
+    V &= m g L \cos(\alpha) \\
+    T &= \tfrac{1}{2}(J_{eq} + m r^2)\dot{\theta}^2 
+        - m L r \cos(\alpha)\,\dot{\theta}\dot{\alpha}
+        + \tfrac{2}{3} m L^2 \dot{\alpha}^2
+\end{align}
+
+Portanto, a Lagrangiana é:
+\begin{equation}
+    \mathcal{L} = T - V
+\end{equation}
+
+\begin{equation}
+    \mathcal{L} = \tfrac{1}{2}(J_{eq} + m r^2)\dot{\theta}^2
+        - m L r \cos(\alpha)\,\dot{\theta}\dot{\alpha}
+        + \tfrac{2}{3} m L^2 \dot{\alpha}^2
+        - m g L \cos(\alpha)
+\end{equation}
+
+\subsection{Equações de Lagrange}
+
+A equação de Lagrange geral para uma coordenada generalizada $q_i$ é:
+\begin{equation}
+    \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right)
+    - \frac{\partial \mathcal{L}}{\partial q_i} = Q_i
+\end{equation}
+
+No sistema, temos as duas coordenadas generalizadas:
+\[
+q_1 = \theta, \qquad q_2 = \alpha
+\]
+
+
+
+\subsubsection*{Para $\theta$}
+\begin{equation}
+    \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\theta}}\right)
+    - \frac{\partial \mathcal{L}}{\partial \theta}
+    = T_{output} - B_{eq}\dot{\theta}
+\end{equation}
+
+- A coordenada $\theta$ recebe o torque do motor. 
+
+- Esse torque possui duas partes:
+
+    1. $T_{output}$: torque útil gerado pelo motor.  
+
+    2. $-B_{eq}\dot{\theta}$: torque dissipativo devido ao atrito viscoso.  
+
+
+
+\subsubsection*{Aplicando a $\alpha$}
+
+Para a coordenada $\alpha$, a equação de Lagrange é:
+\begin{equation}
+    \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\alpha}}\right)
+    - \frac{\partial \mathcal{L}}{\partial \alpha} = 0
+\end{equation}
+
+\noindent
+Observações importantes:
+\begin{itemize}
+    \item A coordenada $\alpha$ não recebe torque aplicado diretamente.
+    \item O único efeito externo é a gravidade (já incluída na energia potencial).
+    \item Por isso, o lado direito da equação é nulo.
+\end{itemize}
+
+
+
+\subsubsection*{Equações diferenciais finais}
+
+Após aplicar as equações de Lagrange para $\theta$ e $\alpha$, e linearizar em torno de $\alpha \approx 0$, obtemos:
+
+\begin{align}
+    (J_{eq} + m r^2)\ddot{\theta} - m L r \ddot{\alpha} &= T_{output} - B_{eq}\dot{\theta} 
+    && \text{(Braço)} \\
+    \tfrac{4}{3} m L^2 \ddot{\alpha} - m L r \ddot{\theta} - m g L \alpha &= 0
+    && \text{(Pêndulo)}
+\end{align}
+
+
+
+\subsection{Modelo em Espaço de Estados}
+
+O torque de saída do motor aplicado ao sistema é dado por:
+\begin{equation}
+    T_{output} = \frac{\eta_m \eta_g K_t K_g}{R_m} \left( V_m - K_G K_m \dot{\theta} \right) 
+    \label{eq:torque}
+\end{equation}
+
+Combinando as equações de movimento obtidas, a representação em espaço de estados pode ser escrita como:
+\begin{equation}
+\begin{bmatrix}
+\dot{\theta} \\
+\dot{\alpha} \\
+\ddot{\theta} \\
+\ddot{\alpha}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & \tfrac{bd}{E} & -\tfrac{cG}{E} & 0 \\
+0 & \tfrac{qd}{E} & -\tfrac{bG}{E} & 0
+\end{bmatrix}
+\begin{bmatrix}
+\theta \\ \alpha \\ \dot{\theta} \\ \dot{\alpha}
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\
+0 \\
+\tfrac{c \, \eta_m \eta_g K_t K_g}{R_m E} \\
+\tfrac{b \, \eta_m \eta_g K_t K_g}{R_m E}
+\end{bmatrix} V_m
+\label{eq:estado}
+\end{equation}
+
+onde os parâmetros são definidos como:
+\begin{align*}
+a &= J_{eq} + mr^2, & b &= mLr, \\
+c &= \tfrac{4}{3} mL^2, & d &= mgL, \\
+E &= ac - b^2, & G &= \tfrac{\eta_m \eta_g K_t K_m K_g^2}{R_m} - B_{eq}
+\end{align*}
+
+A Tabela~\ref{tab:parametros} apresenta os parâmetros utilizados para o sistema SRV02.
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros típicos do sistema SRV02 e do pêndulo}
+\label{tab:parametros}
+\begin{tabular}{lll}
+\toprule
+\textbf{Símbolo} & \textbf{Descrição} & \textbf{Valor} \\
+\midrule
+$K_t$   & Constante de torque do motor            & 0.00767 \\
+$K_m$   & Constante de FEM inversa                & 0.00767 \\
+$R_m$   & Resistência de armadura                 & 2.6 \\
+$K_g$   & Relação de engrenagem (motor $\rightarrow$ carga) & 14 (14:1) \\
+$\eta_m$ & Eficiência do motor                    & 0.69 \\
+$\eta_g$ & Eficiência da caixa de engrenagem      & 0.9 \\
+$B_{eq}$ & Coef. de atrito viscoso equivalente    & $1.5 \times 10^{-3}$ \\
+$J_{eq}$ & Momento de inércia equivalente na carga & $9.31 \times 10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Modelo Numérico em Espaço de Estados}
+
+Substituindo os valores da Tabela~\ref{tab:parametros}, obtemos o modelo em espaço de estados numérico:
+
+\begin{equation}
+\begin{bmatrix}
+\dot{\theta} \\
+\dot{\alpha} \\
+\ddot{\theta} \\
+\ddot{\alpha}
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 39.32 & -14.52 & 0 \\
+0 & 81.78 & -13.98 & 0
+\end{bmatrix}
+\begin{bmatrix}
+\theta \\ \alpha \\ \dot{\theta} \\ \dot{\alpha}
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\ 0 \\ 25.54 \\ 24.59
+\end{bmatrix} V_m
+\label{eq:estadoNum}
+\end{equation}
+
+E a saída é dada por:
+\begin{equation}
+Y =
+\begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0
+\end{bmatrix}
+\begin{bmatrix}
+\theta \\ \alpha \\ 
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\ 0
+\end{bmatrix} V_m
+\end{equation}
+
+\subsection{Obtenção da Função de Transferência}
+
+A partir do modelo em espaço de estados (Eq.~\ref{eq:estadoNum}), pode-se obter a 
+função de transferência que relaciona a entrada do sistema (tensão no motor $V_m$) 
+com a saída escolhida (ângulo do pêndulo $\alpha$). Para isso, foi utilizada a 
+função \texttt{tf()} do \textit{MATLAB}, que converte a representação em espaço 
+de estados para a forma de função de transferência.
+
+As matrizes do sistema são definidas como:
+
+\begin{equation}
+\begin{split}
+A &=
+\begin{bmatrix}
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 39.32 & -14.52 & 0 \\
+0 & 81.78 & -13.98 & 0
+\end{bmatrix}, \quad
+B =
+\begin{bmatrix}
+0 \\ 0 \\ 25.54 \\ 24.59
+\end{bmatrix}, \\
+C &= 
+\begin{bmatrix}
+0 & 1 & 0 & 0
+\end{bmatrix}, \quad
+D = 0
+\end{split}
+\end{equation}
+
+O código em \textit{MATLAB} para a conversão é o seguinte:
+
+\begin{verbatim}
+A = [0 0 1 0;
+     0 0 0 1;
+     0 39.32 -14.52 0;
+     0 81.78 -13.98 0];
+
+B = [0; 0; 25.54; 24.59];
+
+C = [0 1 0 0];   % Saída = ângulo do pêndulo
+D = 0;
+
+sys_ss = ss(A, B, C, D);  % Espaço de estados
+sys_tf = tf(sys_ss);      % Função de transferência
+\end{verbatim}
+
+Assim, obtém-se diretamente a função de transferência $G(s)$, que expressa a 
+dinâmica do sistema:
+
+\begin{equation}
+    G(s) = \frac{\alpha(s)}{V_m(s)}
+          = \frac{24.59\,s - 0.0024}{s^3 + 14.52\,s^2 - 81.78\,s - 637.8}
+\end{equation}
+
+onde $\alpha(s)$ é a transformada de Laplace do ângulo do pêndulo e $V_m(s)$ é a 
+transformada de Laplace da tensão aplicada ao motor.
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[auto, node distance=2cm, >=Latex]
+        \node [draw, rectangle, minimum width=3.5cm, minimum height=1cm, align=center] (plant) 
+        {$G(s) = \dfrac{\alpha(s)}{V_m(s)}$};
+        \node [left=of plant] (input) {$V_m(s)$};
+        \node [right=of plant] (output) {$\alpha(s)$};
+        \draw [->] (input) -- (plant);
+        \draw [->] (plant) -- (output);
+    \end{tikzpicture}
+    \caption{Diagrama de blocos representando a função de transferência entre a entrada $V_m(s)$ e a saída $\alpha(s)$.}
+    \label{fig:tf_pendulo}
+\end{figure}
+
+
+
+
+\section{Análise do Modelo}
+Após a obtenção da função de transferência que descreve a dinâmica entre a entrada $V_m(s)$ (tensão aplicada ao motor) e a saída $\alpha(s)$ (ângulo do pêndulo), procede-se à análise matemática do sistema em malha aberta. Essa análise permite caracterizar propriedades fundamentais, como ordem e grau relativo, localização dos polos e zeros, estabilidade intrínseca e comportamento esperado diante de diferentes entradas. Embora ainda não haja controle implementado, esta etapa é essencial para compreender as limitações naturais do sistema e justificar a necessidade de técnicas de estabilização.
+\subsection{Ordem e grau relativo}
+\begin{itemize}
+    \item \textbf{Ordem do sistema:} 3 (denominador de grau 3) — sistema de 3ª ordem.
+    \item \textbf{Grau do numerador:} 1.
+\end{itemize}
+
+\subsection{Polos e estabilidade}
+As raízes do denominador (polos) obtidos numericamente são aproximadamente:
+\[
+p_1 \approx -17.12,\qquad p_2 \approx -4.94,\qquad p_3 \approx +7.54.
+\]
+Como existe um polo em \(\,p_3 \approx +7.54\) (semiplano direito), o sistema é \textbf{instável em malha aberta}. Em termos práticos, qualquer pequena perturbação tenderá a crescer exponencialmente se não houver controle.
+A raiz do numerador (zero) é aproximadamente:
+\[
+z \approx +9.76\times 10^{-5}.
+\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/polos_e_zeros.png}
+    \caption{Mapa polo-zero do sistema, com polos (X) e zeros (O) destacados numericamente.}
+    \label{fig:pzmap}
+\end{figure}
+
+O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (\textit{undershoot}). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
+
+\subsection{Ganho DC}
+O ganho estático do sistema é:
+\[
+G(0)=\frac{-0.0024}{-637.752}\approx 3.76\times 10^{-6}.
+\]
+O valor é muito pequeno, mas na prática a dinâmica é dominada pelo polo instável.
+
+\subsection{Tipo do sistema}
+Não há polos em $s=0$, logo o sistema é do \textbf{tipo 0}. Em teoria isso significa erro finito para entrada em degrau, mas devido à instabilidade, em malha aberta a saída tende a divergir.
+
+\subsection{Observações finais}
+\begin{itemize}
+    \item O polo no semiplano direito torna o sistema instável em malha aberta.
+    \item O zero no semiplano direito impõe dificuldades na modelagem de um controlador 
+\end{itemize}
+
+\section{Simulação Computacional}
+Para validar e visualizar o comportamento dinâmico previsto pela análise matemática, o sistema foi simulado no ambiente \textit{MATLAB/Simulink}. Utilizando a função de transferência \(G(s)\) obtida, foram analisadas as respostas do sistema em malha aberta a três sinais de entrada canônicos: impulso, degrau e rampa. Essas simulações são fundamentais para confirmar a instabilidade inerente do pêndulo e compreender a natureza da sua resposta antes da implementação de qualquer estratégia de controle. O comportamento observado em todas as simulações reflete diretamente a presença do polo instável em \(s \approx +7.54\).
+
+\subsection{Resposta ao Impulso}
+A resposta a um impulso unitário, que representa a reação do sistema a uma perturbação instantânea de energia, é apresentada na Figura~\ref{fig:impulse}. Como se pode observar, a saída (ângulo do pêndulo) diverge exponencialmente, confirmando a instabilidade do sistema em malha aberta. Uma perturbação mínima é suficiente para que o pêndulo inicie um movimento de queda do qual ele não consegue se recuperar autonomamente. Esse comportamento é totalmente consistente com o polo no semiplano direito, que domina a dinâmica do sistema.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/impulse_response.png}
+    \caption{Resposta ao impulso do sistema em malha aberta.}
+    \label{fig:impulse}
+\end{figure}
+
+\subsection{Resposta ao Degrau}
+A aplicação de uma entrada em degrau, que equivale a fornecer uma tensão constante ao motor, também resulta em uma resposta instável, como ilustrado na Figura~\ref{fig:step}. A saída cresce de forma ilimitada, o que, fisicamente, corresponde à queda do pêndulo de forma acelerada. O resultado reforça que uma ação de controle constante é incapaz de estabilizar o sistema, evidenciando a necessidade de uma malha de realimentação que ajuste a entrada dinamicamente com base no estado do pêndulo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/step_response.png}
+    \caption{Resposta ao degrau do sistema em malha aberta.}
+    \label{fig:step}
+\end{figure}
+
+\subsection{Resposta à Rampa}
+A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe uma divergência ainda mais acentuada. Este teste submete o sistema a uma solicitação de energia continuamente crescente, e a resposta instável se manifesta de forma mais rápida e agressiva. Embora seja um cenário menos comum na prática, a simulação confirma que o sistema em malha aberta é incapaz de seguir qualquer trajetória de referência, por mais simples que seja, reforçando a necessidade crítica de um controlador para a estabilização.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figures/ramp_response.png}
+    \caption{Resposta à rampa do sistema em malha aberta.}
+    \label{fig:ramp}
+\end{figure}
+
+\section{Conclusão}
+Nesta etapa do projeto, o modelo matemático para o pêndulo invertido rotacional (Pêndulo de Furuta) foi obtido com sucesso. Partindo dos princípios da mecânica clássica e utilizando o método de Euler-Lagrange, foram derivadas as equações diferenciais não lineares que descrevem a dinâmica do sistema. Subsequentemente, o modelo foi linearizado em torno do ponto de equilíbrio instável (\(\alpha \approx 0\)) para se obter uma representação em espaço de estados e a correspondente função de transferência, relacionando a tensão de entrada do motor (\(V_m\)) com o ângulo do pêndulo (\(\alpha\)).
+
+A análise da função de transferência revelou características cruciais do sistema em malha aberta. Foi identificado que o sistema é de terceira ordem, do tipo 0, e, mais importante, intrinsecamente instável devido a um polo localizado no semiplano direito (\(p_3 \approx +7.54\)). Adicionalmente, a presença de um zero também no semiplano direito caracteriza o sistema como de fase não mínima, o que pode impor desafios ao projeto do controlador, como a ocorrência de uma resposta inversa inicial (\textit{undershoot}).
+
+As simulações computacionais do sistema em malha aberta para entradas de impulso, degrau e rampa confirmaram visualmente a instabilidade prevista pela análise teórica, com a saída divergindo exponencialmente em todos os cenários. Os resultados obtidos nesta etapa concluem a modelagem e a análise do sistema, fornecendo uma base sólida e indispensável para a próxima fase do projeto. A próxima etapa consistirá no projeto e implementação de um controlador em malha fechada com o objetivo de superar a instabilidade natural do sistema e manter o pêndulo estabilizado na posição vertical.
+
+    % \begin{itemize}
+    %     \item BREGANON, R. et al. Desenvolvimento de sistemas de pêndulos invertidos como ferramentas didáticas em cursos de engenharia de controle e automação. \textit{HOLOS}, v. 7, p. 1–14, 2021. DOI: 10.15628/holos.2021.10351.
+    
+    %     \item DUART, J. L. et al. Dynamic modeling and simulation of a rotational inverted pendulum. \textit{Journal of Physics: Conference Series}, v. 792, 2017.
+    
+    %     \item CASAS, V. M. et al. Construção e projeto de controle de um protótipo de pêndulo invertido rotacional. \textit{EasyChair Preprint}, 2024.
+    
+    %     \item JAKOBSSON, S. Á. Control of a rotary inverted pendulum system using computer vision. Master’s Thesis – Reykjavik University, 2024.
+    
+    %     \item YAMANE, L. de S. Projeto mecânico e síntese do controlador de um pêndulo de Furuta. Trabalho de Conclusão de Curso (Engenharia Mecânica) – Universidade Federal do Amazonas, 2020.
+    % \end{itemize}
+
+
+%----------------------------------------------------------
+% \nocite{yamane2021}
+
+\section{Projeto do Controlador no sistema real}
+
+A avaliação do sistema controlado foi realizada com base em critérios clássicos de desempenho em malha fechada. Entre os principais indicadores considerados, destacam-se:
+
+\begin{itemize}
+    \item \textbf{Tempo de subida ($t_r$):} intervalo necessário para que a saída atinja pela primeira vez o valor de referência. Para o pêndulo, desejamos um tempo de subida de aproximadamente \textbf{0,35\,s}.
+    \item \textbf{Tempo de acomodação ($t_s$):} tempo necessário para que a resposta permaneça dentro de uma faixa de tolerância de $\pm 2\%$ em torno do valor de regime. O sistema deve apresentar \textbf{$t_s \approx 1{,}2$\,s}.
+    \item \textbf{Sobre-sinal ($M_p$):} valor máximo que a resposta ultrapassa o regime permanente. Deseja-se um sobre-sinal moderado de cerca de \textbf{8\%}, indicando boa ação derivativa e ausência de oscilações acentuadas.
+    \item \textbf{Erro em regime permanente ($e_{ss}$):} diferença entre o valor desejado e o valor final alcançado pela saída. Para se manter equilibrado deve-se ter pouca inclinação, assim: \textbf{$e_{ss} \approx 0{,}2^\circ$}.
+\end{itemize}
+
+Nesta seção é apresentado o projeto do controlador do sistema. A Figura 12 mostra o \textit{Lugar Geométrico das Raízes} (LGR) da função de transferência considerada no projeto. A análise do LGR permite avaliar a estabilidade e o comportamento dinâmico do sistema em malha fechada, servindo como base para o ajuste dos parâmetros do controlador.
+
+Observando a Figura 12, nota-se que parte das trajetórias do LGR se estende para o semiplano direito do eixo real, indicando que o sistema em malha aberta apresenta pólos que podem migrar para a região instável à medida que o ganho é aumentado. Esse comportamento reflete a natureza instável da planta e evidencia a dificuldade de estabilização por meio de controladores simples. Além disso, observa-se que alguns ramos do LGR se afastam rapidamente do eixo real, revelando uma tendência a modos oscilatórios e de difícil amortecimento, o que compromete a resposta transitória do sistema.
+
+Para a planta em estudo, o LGR obtido evidencia que o sistema apresenta instabilidade e uma significativa dificuldade na implementação direta de um controlador PID, principalmente devido à localização dos polos e à dinâmica acoplada entre as variáveis do sistema. Na análise teórica, verificou-se que a técnica de realocação de polos seria a que melhor atenderia aos requisitos de desempenho e estabilidade. No entanto, como a planta simulada não representa com total fidelidade o comportamento do sistema físico real, essa abordagem mostrou-se inadequada na prática.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{LGR.jpg}
+    \caption{Lugar Geométrico das Raízes (LGR) da função de transferência da planta.}
+    \label{fig:lgr}
+\end{figure}
+
+\subsection{Justificativa para o Uso do Controlador PD}
+
+No controle do pêndulo, o objetivo principal é estabilizar rapidamente o sistema em torno da posição de equilíbrio vertical, compensando perturbações e minimizando oscilações. Nesse contexto, o uso de um controlador do tipo \textbf{PD (Proporcional–Derivativo)} apresenta vantagens significativas em relação ao PID completo.
+
+O termo proporcional (\(K_p\)) é responsável por gerar o esforço de controle diretamente proporcional ao erro angular, garantindo resposta imediata às variações da posição. Já o termo derivativo (\(K_d\)) atua de forma antecipatória, reagindo à taxa de variação do erro e fornecendo um amortecimento adicional ao sistema. Essa característica é essencial para reduzir oscilações e aumentar a estabilidade de sistemas subamortecidos, como o pêndulo.
+
+Por outro lado, a inclusão do termo integral (\(K_i\)) tende a acumular erro ao longo do tempo, o que é benéfico em sistemas com erro estacionário significativo. No entanto, no caso do pêndulo, a ação integral pode provocar \textit{wind-up} e instabilidade, uma vez que pequenas variações de posição já produzem grandes variações no sinal de controle. Além disso, como o ponto de equilíbrio é uma posição instável, o erro estacionário é naturalmente pequeno quando o sistema é mantido em torno de zero, tornando o termo integral desnecessário.
+
+
+\section{Simulação do Sistema Controlado}
+
+Com base na modelagem da planta e nos parâmetros determinados experimentalmente, foi implementado o controlador PID no ambiente de simulação, conectando-o ao modelo dinâmico do sistema em malha fechada. O objetivo dessa etapa foi verificar o comportamento do sistema frente a uma entrada do tipo degrau e avaliar se o desempenho obtido atendia aos critérios de estabilidade e resposta desejados.
+
+Para esta simulação, foram adotados os seguintes ganhos do controlador:
+\[
+K_p = 400, \quad K_i = 1, \quad K_d = 20
+\]
+A Figura 13 apresenta o resultado obtido para a resposta do sistema em malha fechada sob essas condições de controle.
+
+Observando a resposta, nota-se que, apesar de o sistema inicialmente responder ao degrau de entrada e apresentar um leve amortecimento inicial, o sinal de saída passa a crescer de forma contínua ao longo do tempo. Esse comportamento indica a presença de uma instabilidade no sistema em malha fechada, resultando em uma tendência ao infinito. Tal instabilidade pode estar relacionada à alta sensibilidade dos ganhos aplicados ou à natureza intrinsecamente instável da planta analisada.
+
+Dessa forma, conclui-se que, com os ganhos adotados, o controlador não foi capaz de estabilizar adequadamente o sistema. Esse resultado reforça a necessidade de um ajuste mais criterioso dos parâmetros do PID ou da aplicação de técnicas de controle mais robustas, capazes de lidar melhor com as não linearidades e instabilidades do sistema.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{sistema_controlado.png}
+    \caption{Resposta do sistema em malha fechada com o controlador PID (\(K_p = 400\), \(K_i = 1\), \(K_d = 20\)).}
+    \label{fig:sim_pid}
+\end{figure}
+
+\section{Implementação prática do controlador}
+
+Optou-se pela implementação de um controlador PID clássico, em uma configuração \textit{Single Input Single Output} (SISO), na qual a entrada do sistema é a tensão aplicada ao motor responsável por gerar o torque e a saída é o ângulo do pêndulo. O objetivo do controle é manter o pêndulo estabilizado na posição vertical, correspondente a um ângulo de referência igual a \( 0^\circ \), para isso para a descoberta de tais ganhos foram utilizadas técnicas empiricas para encontrar os ganhos a seguir:
+
+\[
+K_p = 40, \quad K_i = 0, \quad K_d = 0.2
+\]
+
+\section{Descrição da Implementação}
+
+A implementação do controlador foi realizada em ambiente embarcado utilizando o sistema operacional de tempo real \textit{FreeRTOS}. O código principal do controle encontra-se no arquivo \texttt{control.cpp}, responsável por executar o laço de controle em tempo real e pela calibração inicial do sistema.
+
+\subsection{Estrutura Geral}
+
+A tarefa de controle é criada através da função \texttt{control\_task\_start()}, que inicializa o processo e cria uma \textit{task} dedicada ao controle, fixada em um núcleo específico do processador. Dentro desta tarefa, é realizado o procedimento de calibração inicial e, em seguida, inicia-se o laço principal de controle executado com período definido por \texttt{PERIOD\_CONTROL\_MS}.
+
+\subsection{Calibração de Posição Zero}
+
+Antes do início do controle, é realizada a função \texttt{calibrar\_zero\_por\_fundo()}, que instrui o operador a posicionar o pêndulo no fundo (180°) e realiza uma média de leituras do encoder para definir o offset angular de referência. Esse procedimento assegura que a posição de equilíbrio (topo) seja considerada como 0°, corrigindo eventuais erros de montagem ou variações do sensor.
+
+\subsection{Aquisição de Dados e Cálculo de Erros}
+
+A cada iteração do laço de controle, é realizada a leitura da variável de estado por meio da função \texttt{encoder\_get\_obs()}. O ângulo atual do pêndulo é convertido para radianos e ajustado pelo offset de calibração, obtendo-se então o ângulo $\theta$ e o erro em relação ao \textit{setpoint}, definido por \texttt{SETPOINT\_DEG}.
+
+O tempo de amostragem ($\Delta t$) é calculado dinamicamente com base no tempo registrado em milissegundos, garantindo o funcionamento adequado mesmo diante de pequenas variações no tempo de execução.
+
+\subsection{Cálculo do Controle PID}
+
+Os ganhos do controlador proporcional–integral–derivativo (PID) são obtidos em tempo real através da função \texttt{params\_get()}, permitindo ajustes dinâmicos durante a operação. O controle é então calculado conforme as seguintes equações:
+
+\[
+\begin{aligned}
+P(t) &= K_p \cdot e(t) \\
+I(t) &= I(t - 1) + K_i \cdot e(t) \cdot \Delta t \\
+D(t) &= K_d \cdot \frac{e(t) - e(t - 1)}{\Delta t}
+\end{aligned}
+\]
+
+O termo integral é limitado por uma faixa de erro (\texttt{I\_BAND\_DEG}), prevenindo o acúmulo excessivo (\textit{wind-up}) fora da região de controle efetivo. A soma dos três termos gera o sinal de controle:
+
+\[
+u(t) = P(t) + I(t) + D(t)
+\]
+
+\subsection{Saturação e Comando de Motor}
+
+O sinal $u(t)$ é saturado de acordo com o limite \texttt{U\_SAT} e convertido em um valor de \textit{duty cycle} proporcional à sua magnitude. Esse valor é posteriormente enviado à fila \texttt{qMotor}, que aciona o motor com a direção e intensidade correspondentes.  
+Para reduzir oscilações próximas ao equilíbrio, aplica-se uma zona morta (\textit{dead zone}), na qual o comando é zerado se o erro e o sinal de controle forem suficientemente pequenos.
+
+\subsection{Filtragem e Telemetria}
+
+A velocidade angular $\dot{\theta}$ é estimada a partir da diferença entre medições consecutivas de ângulo, sendo suavizada por um filtro exponencial com fator $\alpha = 0{,}85$.  
+Periodicamente (a cada 20\,ms), os dados são empacotados em um pacote de telemetria (\texttt{TelePkt}) contendo valores de posição, erro, sinal de controle e componentes do PID, que são enviados para a fila \texttt{qTel} para monitoramento e registro.
+
+\subsection{Resumo do Funcionamento}
+
+O algoritmo, portanto, realiza a leitura do ângulo do pêndulo, calcula o erro em relação ao \textit{setpoint}, aplica o controle PID com compensação de offset e saturação, e finalmente envia o comando PWM ao motor.  
+Além disso, o sistema fornece dados contínuos de telemetria e mantém uma calibração automática de zero, garantindo operação estável e observável durante o experimento.
+
+\subsubsection{Resposta ao Impulso}
+
+A Figura 14 mostra a resposta do sistema a uma perturbação do tipo impulso, onde o pêndulo é deslocado rapidamente e liberado.  
+Nota-se que o sistema retorna à posição de equilíbrio em tempo reduzido, evidenciando boa rejeição a perturbações e comportamento amortecido. O controle derivativo contribui para a redução do sobrepico e melhora a estabilidade global da resposta.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\linewidth]{impulso_real.jpeg}
+    \caption{Resposta do sistema controlado a uma entrada impulso.}
+    \label{fig:impulso_real}
+\end{figure}
+
+\subsubsection{Resposta ao Degrau}
+
+A Figura 15 apresenta a resposta do sistema a uma entrada do tipo degrau. Nesse ensaio, o sistema parte da posição de equilíbrio e recebe uma variação súbita no valor de referência.  
+Observa-se que o controlador atua de forma a reduzir rapidamente o erro, apresentando uma resposta moderadamente estável por um tempo, mas logo após percebe-se que o sistema tende a cair, resultando na subida do gráfico, com isso chegamos a conclusão que para a entrada em degrau, o PID SISO não apresenta bons resultados.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\linewidth]{degrau_real.jpeg}
+    \caption{Resposta do sistema controlado a uma entrada degrau.}
+    \label{fig:degrau_real}
+\end{figure}
+
+\section{Análise Crítica e Conclusão Final}
+
+O controlador PID projetado demonstrou eficácia parcial na estabilização do sistema. Durante os testes, foi possível observar que o controlador foi capaz de manter o pêndulo próximo da posição de equilíbrio, atenuando as oscilações e garantindo uma resposta dinâmica aceitável. No entanto, a atuação do controlador mostrou-se sensível a pequenas perturbações externas, o que limita sua aplicabilidade em situações de maiores pertubações. Essa sensibilidade é característica de sistemas com comportamento fortemente não linear, como o pêndulo invertido.
+
+Em relação às limitações do projeto, destaca-se que a modelagem utilizada não representou de forma completamente fiel o comportamento físico do sistema real, o que impacta a precisão dos resultados obtidos. Além disso, o controlador PID, embora simples e amplamente utilizado, não oferece o desempenho ideal em sistemas instáveis ou de múltiplas variáveis acopladas. A ausência de técnicas de compensação avançadas e a dificuldade em ajustar os ganhos de forma otimizada também contribuíram para restringir o desempenho final do sistema.
+
+Como propostas para trabalhos futuros, recomenda-se a implementação e comparação com técnicas de controle mais robustas, como o controlador \textit{Linear Quadratic Regulator} (LQR) e o \textit{Model Predictive Control} (MPC). Esses métodos permitem considerar critérios de otimização e restrições físicas da planta, resultando em uma maior estabilidade, menor tempo de acomodação e melhor rejeição a perturbações.
+
+Por fim, o desenvolvimento deste projeto proporcionou um aprendizado significativo, consolidando os conceitos teóricos abordados na disciplina de Sistemas de Controle I e evidenciando a importância da análise crítica e experimental na validação de técnicas de controle. A experiência prática adquirida reforça a relevância de compreender não apenas o comportamento matemático dos sistemas, mas também suas limitações e desafios no contexto real.
+
+
+\printbibliography
+
+
+%----------------------------------------------------------
+
+\end{document}

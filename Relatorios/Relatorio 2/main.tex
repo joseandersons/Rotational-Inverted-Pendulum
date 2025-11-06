@@ -67,13 +67,14 @@
 %----------------------------------------------------------
 
 \begin{abstract}    
-    Este relatório trata da segunda etapa do projeto da disciplina de sistemas de controle 1,
+    Este relatório trata da segunda etapa do projeto da disciplina de Sistemas de Controle I,
     de um pêndulo invertido rotacional. É apresentado, em primeira instância, as equações diferenciais
-    de movimento do pêndulo obtidas através do método Euler-Lagrange, linearização do modelo e obtenção da função
-    de transferência. Em seguida, a estabilidade do sistema é analisada, assim como a resposta do modelo a diferentes
-    entradas, a fim de prever seu comportamento. Por fim, o software MATLAB/Simulink é utilizado para simular o sistema
-    em malha aberta e os resultados são discutidos. 
+    de movimento do pêndulo obtidas através do método Euler-Lagrange \cite{ramos2011rotary}, 
+    linearização do modelo e obtenção da função de transferência. Em seguida, a estabilidade do sistema é analisada, 
+    assim como a resposta do modelo a diferentes entradas, a fim de prever seu comportamento. 
+    Por fim, o software MATLAB/Simulink é utilizado para simular o sistema em malha aberta e os resultados são discutidos. 
 \end{abstract}
+
 
 %----------------------------------------------------------
 
@@ -145,7 +146,8 @@ análisar o modelo obtido e simular através do software MATLAB/Simulink.
 \section{Modelagem Matemática}
 
 A compreensão precisa da dinâmica do Pêndulo de Furuta exige uma formulação matemática rigorosa. Antes de prosseguir com a derivação das equações de movimento, é fundamental estabelecer a convenção de coordenadas adotada. Conforme ilustrado na Figura~\ref{fig:angulo_pendulo}, o ângulo de rotação do braço horizontal é denotado por \(\theta\). O ponto crucial para a estabilização é a definição do ângulo \(\alpha\) do pêndulo em relação à vertical: o estado de interesse, onde o pêndulo se encontra na posição invertida (verticalmente para cima), corresponde explicitamente a \(\alpha = 0\). Essa definição é vital para a interpretação dos resultados de controle e para a linearização do sistema em torno deste ponto de equilíbrio instável.
-
+A formulação adotada neste relatório segue de perto a apresentada em Ramos et al. \cite{ramos2011rotary}, 
+que descrevem detalhadamente o procedimento de modelagem do pêndulo invertido rotacional (Pêndulo de Furuta). 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\columnwidth]{figures/angulo_pendulo.png} % Ajustado para columnwidth
@@ -438,7 +440,7 @@ Y =
 0 & 1 & 0 & 0
 \end{bmatrix}
 \begin{bmatrix}
-\theta \\ \alpha \\ \dot{\theta} \\ \dot{\alpha}
+\theta \\ \alpha \\ 
 \end{bmatrix}
 +
 \begin{bmatrix}
@@ -541,9 +543,15 @@ A raiz do numerador (zero) é aproximadamente:
 \[
 z \approx +9.76\times 10^{-5}.
 \]
-O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (undershoot). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
 
-No entanto, como o sistema é instável, essa resposta inversa inicial seria rapidamente dominada e mascarada pelo crescimento exponencial causado pelo polo instável.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/polos_e_zeros.png}
+    \caption{Mapa polo-zero do sistema, com polos (X) e zeros (O) destacados numericamente.}
+    \label{fig:pzmap}
+\end{figure}
+
+O sistema possui, portanto, um zero no semiplano direito (RHP), caracterizando-o como \textbf{não mínimo-fase}, a principal consequência disso é a tendência do sistema de apresentar uma resposta inversa (\textit{undershoot}). Se o sistema fosse estável e recebesse um comando em degrau para ir a um valor positivo, a saída primeiro se moveria ligeiramente na direção negativa antes de se corrigir.
 
 \subsection{Ganho DC}
 O ganho estático do sistema é:
@@ -569,7 +577,7 @@ A resposta a um impulso unitário, que representa a reação do sistema a uma pe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/impulse_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/impulse_response.png}
     \caption{Resposta ao impulso do sistema em malha aberta.}
     \label{fig:impulse}
 \end{figure}
@@ -579,7 +587,7 @@ A aplicação de uma entrada em degrau, que equivale a fornecer uma tensão cons
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/step_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/step_response.png}
     \caption{Resposta ao degrau do sistema em malha aberta.}
     \label{fig:step}
 \end{figure}
@@ -589,7 +597,7 @@ A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.45\textwidth]{figures/ramp_response.jpeg}
+    \includegraphics[width=0.45\textwidth]{figures/ramp_response.png}
     \caption{Resposta à rampa do sistema em malha aberta.}
     \label{fig:ramp}
 \end{figure}
