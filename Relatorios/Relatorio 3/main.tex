@@ -853,6 +853,66 @@ A resposta a uma entrada do tipo rampa, mostrada na Figura~\ref{fig:ramp}, exibe
     \label{fig:ramp}
 \end{figure}
 
+\section{Identificação e Análise das Respostas reais}
+
+\begin{itemize}
+    \item \textbf{Resposta ao Impulso} Foi obtida ao fornecer uma pequena pertubação.
+    \item \textbf{Resposta ao Degrau} Foi obtida ao fornecer uma pertubação de maneira constante.
+    \item \textbf{Resposta à Rampa} Foi obtida ao fornecer uma pertubação crescente.
+
+Com base nessa análise, podemos classificar cada imagem.
+
+% -----------------------------------------------------
+\subsection{Figura 1: Resposta ao Impulso}
+% -----------------------------------------------------
+
+\begin{figure}[h!]
+    \centering
+    % Associação: A resposta abrupta (impulso) é associada ao novo nome de arquivo.
+    \includegraphics[width=0.45\textwidth]{impulso_resposta_aberta.jpg}
+    \caption{Resposta em malha aberta ao \textbf{Impulso} (iniciando em $t \approx 115$s).}
+    \label{fig:impulso}
+\end{figure}
+
+
+% -----------------------------------------------------
+\subsection{Figura 2: Resposta ao Degrau}
+% -----------------------------------------------------
+
+\begin{figure}[h!]
+    \centering
+    % Associação: A resposta suave quadrática (degrau) é associada ao novo nome.
+    \includegraphics[width=0.45\textwidth]{degrau_malha_aberta.jpg}
+    \caption{Resposta em malha aberta ao \textbf{Degrau} (iniciando em $t \approx 268$s).}
+    \label{fig:degrau}
+\end{figure}
+
+\paragraph{Observações:}
+Esta imagem (arquivo: \texttt{degrau\_malha\_aberta.jpg}) corresponde à \textbf{resposta ao degrau}.
+\begin{itemize}
+    \item \textbfJustificativa: Em $t \approx 268$s, a curva $\theta$ inicia seu crescimento de forma suave, com uma tangente horizontal. Este comportamento $y(t) \propto t^2$ é o esperado para uma resposta ao degrau.
+    \item \textbfComportamento:} A aplicação de uma entrada constante (degrau) faz com que o ângulo do pêndulo comece a divergir. A taxa de divergência (velocidade angular) aumenta exponencialmente, levando o pêndulo a girar cada vez mais rápido.
+\end{itemize}
+
+% -----------------------------------------------------
+\subsection{Figura 3: Resposta à Rampa}
+% -----------------------------------------------------
+
+\begin{figure}[h!]
+    \centering
+    % Associação: A resposta suave cúbica (rampa) é associada ao novo nome.
+    \includegraphics[width=0.45\textwidth]{rampa_malha_aberta.jpg}
+    \caption{Resposta em malha aberta à \textbf{Rampa} (iniciando em $t \approx 356$s).}
+    \label{fig:rampa}
+\end{figure}
+
+\paragraph{Observações:}
+Esta imagem (arquivo: \texttt{rampa\_malha\_aberta.jpg}) corresponde à \textbf{resposta à rampa}.
+\begin{itemize}
+    \item \textbfJustificativa: Em $t \approx 356$s, a resposta $\theta$ também começa suavemente, mas visualmente "descola" do eixo zero de forma mais lenta que a resposta ao degrau. Este comportamento $y(t) \propto t^3$ é característico da resposta à rampa.
+    \item \textbfComportamento:} A entrada em rampa (que cresce linearmente) também desestabiliza o sistema. A resposta angular $\theta$ cresce exponencialmente (dominada pela instabilidade do sistema), levando novamente o pêndulo a girar em velocidade crescente.
+\end{itemize}
+
 \section{Conclusão}
 Nesta etapa do projeto, o modelo matemático para o pêndulo invertido rotacional (Pêndulo de Furuta) foi obtido com sucesso. Partindo dos princípios da mecânica clássica e utilizando o método de Euler-Lagrange, foram derivadas as equações diferenciais não lineares que descrevem a dinâmica do sistema. Subsequentemente, o modelo foi linearizado em torno do ponto de equilíbrio instável (\(\alpha \approx 0\)) para se obter uma representação em espaço de estados e a correspondente função de transferência, relacionando a tensão de entrada do motor (\(V_m\)) com o ângulo do pêndulo (\(\alpha\)).
 
